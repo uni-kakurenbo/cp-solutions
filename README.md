@@ -1,1 +1,1 @@
-# my-submissions-for-competition-programming
+My Submissions for Competition Programming
