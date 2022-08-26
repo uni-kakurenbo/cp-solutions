@@ -24,23 +24,21 @@ using namespace std;
 #define until(...) while(!(__VA_ARGS__))
 
 #define REP(i,n) for(int i=0, i##_length=int(n); i<i##_length; ++i)
-#define REPD(i,n) for(int i=n-1; i>=0; --i)
-#define FOR(i,a,b) for(ll i=a, i##_last=ll(b); i<=i##_last; ++i)
-#define FORD(i,a,b) for(ll i=a, i##_last=ll(b); i>=i##_last; --i)
-#define FORA(i,I) for(auto& i:I)
+#define REPD(i,n) for(int i=(n)-1; i>=0; --i)
+#define FOR(i,a,b) for(ll i=(a), i##_last=ll(b); i<=i##_last; ++i)
+#define FORD(i,a,b) for(ll i=(a), i##_last=ll(b); i>=i##_last; --i)
 
-#define ALL(x) begin(x),end(x)
-#define RALL(x) rbegin(x),rend(x)
+#define ALL(x) begin((x)),end((x))
+#define RALL(x) rbegin((x)),rend((x))
 
 #define F$ first
 #define S$ second
 
-#define MOD$(x,r) ((x)%(r)+(r))%(r)
-
 using ll = long long;
 using ull = unsigned long long;
+using ld = long double;
 
-template<class T> inline T mod(T &x, T &r) { return (x%r+r)%r; }
+template<class T1, class T2> inline auto mod(T1 x, T2 r) { return (x%r+r)%r; }
 
 template<class T> inline bool chmax(T &a, T b) { return (a<b ? a=b, true : false); }
 template<class T> inline bool chmin(T &a, T b) { return (a>b ? a=b, true : false); }
@@ -54,24 +52,35 @@ template <class T = int> struct UnfoldedMatrix : vector<T> {
 };
 
 signed main() {
-    ll a, b, k; cin >> a >> b >> k;
+    int h, w; cin >> h >> w;
 
-    UnfoldedMatrix<ll> dp(a+1, b+1);
+    UnfoldedMatrix<int> grid(h, w);
 
-    dp(0,0) = 1;
-    FOR(i, 0, a) FOR(j, 0, b) {
-        if(i > 0) dp(i,j) += dp(i-1,j);
-        if(j > 0) dp(i,j) += dp(i,j-1);
+    REP(i, h) REP(j, w) {
+        char v; cin >> v;
+        grid(i,j) = v == '+' ? 1 : -1;
     }
 
-    function<string(int,int,ll)> solve = [&dp,&solve](int a, int b, ll k) {
-        if(a == 0) return string(b, 'b');
-        if(b == 0) return string(a, 'a');
-        if(k <= dp(a-1,b)) return "a"s + solve(a-1, b, k);
-        else return "b"s + solve(a, b-1, k - dp(a-1,b));
-    };
+    UnfoldedMatrix<ll> dp(h+1, w+1);
+    REPD(i, h) REPD(j, w) {
+        if(i == h-1 and j == w-1) continue;
+        if((i+j) % 2 == 0) {
+            dp(i,j) = -INF32;
+            if(i < h-1) chmax(dp(i,j), dp(i+1, j) + grid(i+1,j));
+            if(j < w-1) chmax(dp(i,j), dp(i, j+1) + grid(i,j+1));
+        } else {
+            dp(i,j) = INF32;
+            if(i < h-1) chmin(dp(i,j), dp(i+1, j) - grid(i+1,j));
+            if(j < w-1) chmin(dp(i,j), dp(i, j+1) - grid(i,j+1));
+        }
+        debug(dp);
+    }
 
-    cout << solve(a, b, k) << "\n";
+    ll diff = dp(0,0);
+    debug(diff);
+
+    if(diff == 0) { cout << "Draw" << "\n"; return 0; }
+    cout << (diff > 0 ? "Takahashi" : "Aoki") << "\n";
 
     return 0;
 }

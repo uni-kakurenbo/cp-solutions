@@ -3,9 +3,15 @@ using namespace std;
 
 using ll = long long;
 
-#define REP(i,n) for(ll i=0; i<ll(n); i++)
-#define FOR(i,a,b) for(ll i=a; i<=ll(b); i++)
-#define FORA(i,I) for(auto& i:I)
+#define REP(i,n) for(int i=0, i##_length=int(n); i<i##_length; ++i)
+#define REPD(i,n) for(int i=(n)-1; i>=0; --i)
+#define LOOP(n) REP(_$, (n))
+#define FOR(i,l,r) for(ll i=(l), i##_last=ll(r); i<=i##_last; ++i)
+#define FORD(i,l,r) for(ll i=(l), i##_last=ll(r); i>=i##_last; --i)
+#define ITR(x,v) for(auto x : v)
+#define ITRR(x,v) for(auto &x : v)
+#define ITRP(x,y,v) for(auto [x, y] : v)
+#define ITRPR(x,y,v) for(auto &[x, y] : v)
 
 #define All(x) x.begin(),x.end()
 
@@ -21,10 +27,12 @@ int main() {
         ll a; cin >> a;
         mp[a]++;
     }
-    for(auto [k, v] : mp) {
+
+    ITRP(k, v, mp) {
         if(v <= 1) continue;
         ans -= v * (v-1)/2;
     }
+
     cout << ans << endl;
     return 0;
 }
