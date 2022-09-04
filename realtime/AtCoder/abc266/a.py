@@ -10,12 +10,5 @@ from sys import setrecursionlimit, stderr, argv
 def debug(*args, **opts):
     if argv[-1] == "LOCAL_JUDGE": print(*args, **opts, file=stderr)
 
-n = int(input())
-P = [*map(int, input().split())]
-x = n
-ans = 0
-while x != 1:
-    x = P[x-2]
-    debug(x)
-    ans += 1
-print(ans)
+s = input();
+print(s[(len(s)+1)//2-1]);

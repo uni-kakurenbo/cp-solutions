@@ -44,19 +44,6 @@ template<class T> inline bool chmax(T &a, T b) { return (a<b ? a=b, true : false
 template<class T> inline bool chmin(T &a, T b) { return (a>b ? a=b, true : false); }
 /* #endregion */
 
-template<class I, class T = typename iterator_traits<I>::value_type, class L = int, class C = vector<pair<T,L>>> struct RLE : C {
-    RLE(I first, I last) {
-        this->clear();
-        L cnt=0;;
-        for(I itr=first, prev=itr; itr!=last; itr++) {
-            if(*prev != *itr) this->emplace_back(*prev, cnt), cnt = 1;
-            else cnt++;
-            prev = itr;
-        }
-        this->emplace_back(*prev(last), cnt);
-    }
-};
-
 bool solve(string ss) {
     vector<char> s;
     for(char c : ss) s.emplace_back(c);

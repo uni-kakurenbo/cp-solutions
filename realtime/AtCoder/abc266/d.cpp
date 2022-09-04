@@ -46,39 +46,57 @@ using ll = long long;
 using ull = unsigned long long;
 using ld = long double;
 
+constexpr char ln = '\n';
+
 template<class T1, class T2> inline auto mod(T1 x, T2 r) { return (x%r+r)%r; }
 
 template<class T> inline bool chmax(T &a, T b) { return (a<b ? a=b, true : false); }
 template<class T> inline bool chmin(T &a, T b) { return (a>b ? a=b, true : false); }
 /* #endregion */
 
+template <class T = int> struct UnfoldedMatrix : vector<T> {
+    UnfoldedMatrix(size_t h = 0, size_t w = 0, T init = T()) : vector<T> (h*w, init), height(h), width(w), buffer_size(h*w) {};
+    inline T& operator()(size_t i, size_t j) { return (*this)[i*width+j]; }
+  private:
+    size_t height, width, buffer_size;
+};
+
+constexpr int MAX_T = 200000;
 
 signed main() {
-    int n, m; cin >> n >> m;
-    vector<vector<int>> ans;
-
-    function<void(vector<int>)> generate = [&](vector<int> p) {
-        if((int)p.size() == n) {
-            ans.push_back(p);
-            return;
-        }
-        int l = p.back();
-        p.emplace_back(1);
-        FOR(i, l+1, m) {
-            p.back() = i;
-            debug(p);
-            generate(p);
-        }
-        return;
-    };
-    FOR(s, 1, m) generate(vector<int>{ int(s) });
-
-    sort(ALL(ans));
-
-    ITR(v, ans) {
-        ITR(x, v) cout << x << " ";
-        cout << "\n";
+    int n; cin >> n;
+    map<int,int> a[5];
+    LOOP(n) {
+        int t, x, v; cin >> t >> x >> v;
+        a[x][t] = v;
     }
+
+    UnfoldedMatrix<ll> dp(MAX_T+1, 5, -1); // dp(i,j) := 時刻 i で座標 j にいるとき，答えの最大値．
+
+    dp(0, 0) = 0;
+
+    ll ans = 0;
+
+    REP(i, MAX_T) {
+        REP(k, 5) {
+            REP(j, 5) if(abs(k-j) <= 1) chmax(dp(i+1, k), dp(i, j));
+            auto tp = a[k].upper_bound(i);
+            if(tp == a[k].end()) continue;
+            REP(j, 5) {
+                if(dp(i,j) < 0) continue;
+                int dx = abs(j-k), dt = tp->F$ - i;
+                // debug(dx, dt);
+                if(dx <= dt) {
+                    chmax(dp(tp->F$, k), dp(i, j) + tp->S$);
+                    chmax(ans, dp(tp->F$, k));
+                }
+            }
+        }
+    }
+
+    // debug(dp);
+
+    cout << ans << ln;
 
     return 0;
 }

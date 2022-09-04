@@ -10,7 +10,5 @@ from sys import setrecursionlimit, stderr, argv
 def debug(*args, **opts):
     if argv[-1] == "LOCAL_JUDGE": print(*args, **opts, file=stderr)
 
-A = [*map(int, input().split())]
-A.sort();
-debug(A);
-print("Yes" if A[0] == A[2] and A[2] != A[3] and A[3] == A[-1] or A[0] == A[1] and A[1] != A[2] and A[2] == A[-1] else "No")
+n = int(input())
+print((n - 998244353) % 998244353)
