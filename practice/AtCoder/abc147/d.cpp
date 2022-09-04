@@ -54,41 +54,21 @@ template<class T> inline bool chmax(T &a, T b) { return (a<b ? a=b, true : false
 template<class T> inline bool chmin(T &a, T b) { return (a>b ? a=b, true : false); }
 /* #endregion */
 
-template <class T = int> struct UnfoldedMatrix : vector<T> {
-    UnfoldedMatrix(size_t h = 0, size_t w = 0, T init = T()) : vector<T> (h*w, init), height(h), width(w), buffer_size(h*w) {};
-    inline T& operator()(size_t i, size_t j) { return (*this)[i*width+j]; }
-  private:
-    size_t height, width, buffer_size;
-};
-
-struct Edge {
-    int to; int cost;
-    Edge(int t, int w) : to(t), cost(w) {}
-};
-
-template <class T> using Graph = vector<vector<T>>;
+#include <atcoder/modint>
+using mint = atcoder::modint1000000007;
+ostream& operator<<(ostream& out, const mint val) { return out << val.val(); }
 
 signed main() {
-    int n, m; cin >> n >> m;
+    int n; cin >> n;
+    vector<ll> a(n); ITRR(v, a) cin >> v;
 
-    UnfoldedMatrix<ll> dp(n, n, INF32);
-    REP(i, n) dp(i,i) = 0;
+    mint ans = 0;
 
-    Graph<Edge> G(n);
-    LOOP(m) {
-        int a, b, c; cin >> a >> b >> c; --a, --b;
-        dp(a,b) = c;
-    }
-
-    ll ans = 0;
-
-    REP(k, n) {
-        UnfoldedMatrix<ll> nxt_dp(n, n);
-        REP(i, n) REP(j, n) {
-            nxt_dp(i,j) = min(dp(i,j), dp(i,k) + dp(k,j));
-            if(nxt_dp(i,j) < INF32) ans += nxt_dp(i,j);
-        }
-        dp = nxt_dp;
+    REP(i, 60) {
+        ll msk = 1LL << i;
+        int c0 = 0, c1 = 0;
+        ITR(v, a) ++((v & msk) > 0 ? c0 : c1);
+        ans += mint(msk) * c0 * c1;
     }
 
     cout << ans << ln;
