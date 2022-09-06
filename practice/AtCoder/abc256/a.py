@@ -1,2 +1,2 @@
 n = int(input());
-print("   " + str(2**n));
+print(2**n);
