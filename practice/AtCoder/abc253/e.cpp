@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+s#include <bits/stdc++.h>
 using namespace std;
 
 #ifdef LOCAL_JUDGE

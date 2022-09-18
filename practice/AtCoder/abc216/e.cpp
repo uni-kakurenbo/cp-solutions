@@ -25,7 +25,7 @@ int main() {
     priority_queue<ll> atractions;
     REP(i, n) atractions.emplace(fun[i]);
     atractions.emplace(0);
-    
+
     ll same = 1;
     ll rest = k;
     ll satisfaction = 0;
@@ -44,7 +44,7 @@ int main() {
             break;
         }
     }
-    
+
     cout << satisfaction << endl;
     return 0;
 }

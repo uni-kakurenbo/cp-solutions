@@ -20,7 +20,7 @@ int main() {
     REP(i, n) {
         ans += mp[V[i]];
     }
-    
+
     cout << ans << endl;
     return 0;
 }
