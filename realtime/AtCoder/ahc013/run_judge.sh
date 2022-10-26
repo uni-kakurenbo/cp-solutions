@@ -14,7 +14,6 @@ function run_case() {
     local executin_command=$1
     local file="$2"
 
-    # shellcheck disable=SC2094
     case_name=$(basename "$file")
     case_name="${case_name%.*}"
 
