@@ -1,46 +1,29 @@
-#include<bits/stdc++.h>
+/*
+ * @uni_kakurenbo
+ * https://github.com/uni-kakurenbo/competitive-programming-workspace
+ *
+ * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
+ */
+/* #language C++ GCC */
+/* #region template */
+#include <bits/stdc++.h>
 using namespace std;
 
-#ifdef LOCAL_JUDGE
-    #include<debug>
-    #define debug(...) do { Debug::debug(nullptr, "#" + to_string(__LINE__) + ": "); Debug::debug(__VA_ARGS__); } while(0);
-#else
-    #define debug(...) { ; }
-#endif
+#include "template.hpp"
+#include "output.hpp"
 
-using ll = long long;
-using ull = unsigned long long;
+Output _print;
+#define print _print
+/* #endregion */
 
-#define until(...) while(!(__VA_ARGS__))
-
-#define REP(i,n) for(int i=0, i##_length=int(n); i<i##_length; ++i)
-#define FOR(i,a,b) for(int i=a, i##_last=int(b); i<=i##_last; ++i)
-#define FORA(i,I) for(auto& i:I)
-
-#define ALL(x) x.begin(),x.end()
-#define SIZE(x) ((int)(x).size())
-
-template<class T> inline bool chmax(T &a, T b) { return (a<b ? a=b, true : false); }
-template<class T> inline bool chmin(T &a, T b) { return (a>b ? a=b, true : false); }
-
-template<class T> vector<T> divisors(T n) {
-    vector<T> res;
-    for (ll i = 1; i * i <= n; i++) {
-        if (n % i == 0) {
-            res.emplace_back(i);
-            if (i * i != n) res.emplace_back(n / i);
-        }
-    }
-    sort(ALL(res));
-    return res;
-}
+#include "numeric/divisors.hpp"
 
 signed main() {
     int n; cin >> n;
     int ans = 0;
     FOR(i, 1, n) {
         if(i%2 == 0) continue;
-        vector divs = divisors(i);
+        Divisors divs(i);
         ans += divs.size() == 8;
     }
     printf("%i\n", ans);

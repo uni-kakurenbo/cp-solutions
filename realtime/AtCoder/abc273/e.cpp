@@ -49,7 +49,7 @@ using ld = long double;
 constexpr char ln = '\n';
 constexpr char spc = ' ';
 
-inline void fast_io() { ios::sync_with_stdio(false), cin.tie(nullptr); }
+__attribute__((constructor)) inline void fast_io() { ios::sync_with_stdio(false), cin.tie(nullptr); }
 
 template<class T1, class T2> inline auto mod(T1 x, T2 r) { return (x%r+r)%r; }
 
@@ -110,8 +110,6 @@ struct RestorableStack {
 };
 
 signed main() {
-    fast_io();
-
     int q; cin >> q;
     RestorableStack<int> A;
     LOOP(q) {
