@@ -1,0 +1,8 @@
+# testcases
+cases*/
+
+# tools
+tools/
+
+# binary
+*.exe
