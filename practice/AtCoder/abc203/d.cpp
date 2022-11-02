@@ -67,15 +67,15 @@ template <class T = int> struct UnfoldedMatrix : vector<T> {
 };
 
 template<class I, class T = typename iterator_traits<I>::value_type, class C = vector<T>>
-struct Compress : C {
+struct Compression : C {
     vector<T> values;
-    Compress() {}
-    Compress(const I first, const I last) {
+    Compression() {}
+    Compression(const I first, const I last) {
         this->values.assign(first, last);
         sort(values.begin(), values.end());
         values.erase(unique(values.begin(), values.end()), values.end());
         this->resize(distance(first, last));
-        for(auto itr=this->begin(),val=values.begin(),e=first; e!=last; ++itr,++val,++e) {
+        for(auto itr=begin(*this),val=values.begin(),e=first; e!=last; ++itr,++val,++e) {
             *itr = distance(values.begin(), lower_bound(values.begin(), values.end(), *e));
         }
     }
@@ -99,9 +99,9 @@ namespace Internal {
     template<class T> T min(T a, T b) { return std::min(a, b); }
 }
 
-template<class T, T (*op)(T,T)> struct Apply {
-    Apply(T&& v) : _v(v) {}
-    template<class U> Apply& operator<<=(U&& val) & noexcept {
+template<class T, T (*op)(T,T)> struct Applier {
+    Applier(T&& v) : _v(v) {}
+    template<class U> Applier& operator<<=(U&& val) & noexcept {
         _v = op(_v, forward<U>(val));
         return *this;
     }
@@ -111,15 +111,15 @@ template<class T, T (*op)(T,T)> struct Apply {
     T _v;
 };
 
-template<class T> using Max = Apply<T,Internal::max<T>>;
-template<class T> using Min = Apply<T,Internal::min<T>>;
+template<class T> using Max = Applier<T,Internal::max<T>>;
+template<class T> using Min = Applier<T,Internal::min<T>>;
 
 signed main() {
     int n, k; cin >> n >> k;
 
     UnfoldedMatrix<int> A(n,n);
     REP(i, n) REP(j, n) cin >> A(i,j);
-    Compress comped(ALL(A));
+    Compression comped(ALL(A));
 
     Min<int> ans = INF32;
 

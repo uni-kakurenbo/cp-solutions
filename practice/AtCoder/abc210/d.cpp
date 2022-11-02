@@ -30,6 +30,7 @@ signed main() {
     Min<ll> ans = INF64;
 
     auto solve = [&]() {
+        int h = a.height(), w = a.width();
         Grid<ll> dp(h+1, w+1, INF64);
         FOR(i, 1, h) FOR(j, 1, w) {
             if(chmin(dp(i,j), min(dp(i-1,j), dp(i,j-1)))) {
@@ -41,13 +42,10 @@ signed main() {
         }
     };
 
-    solve();
-    reverse(ALL(a));
-    solve();
-    REP(i, h) reverse(ALL(a[i]));
-    solve();
-    reverse(ALL(a));
-    solve();
+    LOOP(4) {
+        a.rotate();
+        solve();
+    }
 
     print(ans);
 

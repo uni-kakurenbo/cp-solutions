@@ -21,14 +21,14 @@ Output _print;
 
 // segtree + dp ...?
 
-#include "iterable/accumulate.hpp"
+#include "iterable/accumulation.hpp"
 #include "numeric/matrix.hpp"
 
 signed main() {
     int n, m; cin >> n >> m;
     vector<int> a(n); REP(i, n) cin >> a[i];
 
-    Accumulate acc(ALL(a));
+    Accumulation acc(ALL(a));
 
 
 

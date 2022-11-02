@@ -10,7 +10,7 @@
 using namespace std;
 
 #include "template.hpp"
-#include "develop/dev_assert.hpp"
+#include "internal/develop/dev_assert.hpp"
 
 using Score = ll;
 using Candy = short;
