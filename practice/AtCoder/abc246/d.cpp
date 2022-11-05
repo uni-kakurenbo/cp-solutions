@@ -1,46 +1,41 @@
-#include<bits/stdc++.h>
+/*
+ * @uni_kakurenbo
+ * https://github.com/uni-kakurenbo/competitive-programming-workspace
+ *
+ * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
+ */
+/* #language C++ GCC */
+/* #region template */
+#include <bits/stdc++.h>
 using namespace std;
 
-#ifdef LOCAL_JUDGE
-    #include<debug>
-    #define debug(...) do { Debug::debug(nullptr, "#" + to_string(__LINE__) + ": "); Debug::debug(__VA_ARGS__); } while(0);
-#else
-    #define debug(...) { ; }
-#endif
+#include "template.hpp"
+#include "output.hpp"
 
-using ll = long long;
-using ull = unsigned long long;
+Output _print;
+#define print _print
+/* #endregion */
 
-#define until(...) while(!(__VA_ARGS__))
+#include "numeric/interval_scanner.hpp"
 
-#define REP(i,n) for(int i=0, i##_length=int(n); i<i##_length; ++i)
-#define FOR(i,a,b) for(int i=a, i##_last=int(b); i<=i##_last; ++i)
-#define FORA(i,I) for(auto& i:I)
-
-#define ALL(x) x.begin(),x.end()
-#define SIZE(x) ((int)(x).size())
-
-template<class T> inline bool chmax(T &a, T b) { return (a<b ? a=b, true : false); }
-template<class T> inline bool chmin(T &a, T b) { return (a>b ? a=b, true : false); }
-
-#define INF64 9223372036854775807LL
-
-ll f(ll a, ll b) {
-    return (a + b) * (a*a + b*b);
+ll f(ll a, ll b){
+  return a*a*a + a*a*b + a*b*b + b*b*b;
 }
 
 signed main() {
     ll n; cin >> n;
-    int m = ceil(cbrt(n));
-    ll ans = INF64;
-    FOR(i, 0, m) {
-        ll ng = -1, ok = m;
-        while (abs(ok-ng) > 1) {
-            ll mid = (ok+ng) / 2;
-            (f(i, mid) >= n ? ok : ng) = mid;
-        }
-        chmin(ans, f(i, ok));
-    }
-    printf("%lli\n", ans);
-    return 0;
+
+    constexpr ll MAX = 1000001;
+    ll a = 0, b = MAX, ans = INF64;
+    auto validate = [&](auto) { return true; };
+    auto init = [&]() { a = 0, b = MAX; };
+    auto valid = [&]() { return b >= 0 and f(a, b) >= n; };
+    auto expand = [&](auto x) { a = x; };
+    auto contract = [&](auto x) { b = MAX-x; };
+    auto apply = [&](auto, auto) { chmin(ans, f(a, b)); };
+
+    InclusiveIntervalScanner<ll> scanner(validate, init, valid, expand, contract, apply);
+    scanner.scan_all<true,false>(0, MAX+1);
+
+    print(ans);
 }
