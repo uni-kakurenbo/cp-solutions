@@ -20,6 +20,7 @@ Output _print;
 using namespace atcoder;
 
 #include "data_structure/range_addition.hpp"
+using namespace Lib;
 
 ll op(ll a, ll b) { return a + b; }
 ll e() { return 0; }
