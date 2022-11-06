@@ -1,0 +1,112 @@
+/*
+ * @uni_kakurenbo
+ * https://github.com/uni-kakurenbo/competitive-programming-workspace
+ *
+ * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
+ */
+/* #language C++ GCC */
+/* #region template */
+#include <bits/stdc++.h>
+using namespace std;
+
+/* #expanded [template.hpp] */
+#include <iostream>
+#include <utility>
+#ifdef LOCAL_JUDGE
+#include<debug>
+#define debug(...) Debug::debug(Debug::split(#__VA_ARGS__), 0, __LINE__, __VA_ARGS__)
+#define DEBUG(...) do { Debug::DEBUG(nullptr, "\033[3;35m#" + to_string(__LINE__) + "\033[m "); Debug::DEBUG(__VA_ARGS__); Debug::DEBUG(nullptr, "\033[m\n"); } while(0);
+#else
+#define debug(...) ({ ; })
+#define DEBUG(...) ({ ; })
+#endif
+#define INF32 2147483647
+#define INF64 9223372036854775807LL
+#define until(...) while(!(__VA_ARGS__))
+#define REP(i,n) for(int i=0, i##_length=int(n); i<i##_length; ++i)
+#define REPF(i,l,r) for(auto i=(l), i##_last=(r); i<i##_last; ++i)
+#define REPD(i,n) for(auto i=(n)-1; i>=0; --i)
+#define LOOP(n) REP($_, (n))
+#define FOR(i,l,r) for(auto i=(l), i##_last=(r); i<=i##_last; ++i)
+#define FORD(i,l,r) for(auto i=(l), i##_last=(r); i>=i##_last; --i)
+#define ITR(x,v) for(const auto &x : (v))
+#define ITRP(x,v) for(auto x : (v))
+#define ITRR(x,v) for(auto &x : (v))
+#define ITRM(x,y,v) for(const auto [x, y] : (v))
+#define ITRMP(x,y,v) for(auto [x, y] : (v))
+#define ITRMR(x,y,v) for(auto &[x, y] : (v))
+#define ALL(x) std::begin((x)),std::end((x))
+#define RALL(x) std::rbegin((x)),std::rend((x))
+#define $F first
+#define $S second
+using ll = long long;using ull = unsigned long long;using ld = long double;constexpr char ln = '\n';constexpr char spc = ' ';constexpr std::pair<int,int> DIRS4[] = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };constexpr std::pair<int,int> DIRS8[] = { { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, -1 } };__attribute__((constructor)) inline void fast_io() { std::ios::sync_with_stdio(false), std::cin.tie(nullptr); }template<class T1, class T2> inline auto mod(T1 x, T2 r) { return (x%r+r)%r; }template<class T1, class T2> inline bool chmax(T1 &a, T2 b) { return (a<b ? a=b, true : false); }template<class T1, class T2> inline bool chmin(T1 &a, T2 b) { return (a>b ? a=b, true : false); }
+/* [template.hpp] */
+/* #expanded [output.hpp] */
+#include <iostream>
+#include <string>
+template<class Stream = std::ostream, class Terminator = std::string, class Separator = std::string>struct Output {private:template<class T>int _put(bool, Stream &ost, const T &val) {ost << val;return 0;}template<class T>auto _put(int, Stream &ost, const T &val) -> decltype(val.val(), 0) {ost << val.val();return 0;}protected:template<class T>Stream *put(Stream *ost, const T &val) {_put(0, *ost, val);return out;}public:using char_type = typename Stream::char_type;static constexpr auto sendl = std::endl<char_type,std::char_traits<char_type>>;Stream *out;Terminator endline;Separator separator;Output(Stream *out = &std::cout, Terminator endline = "\n", Separator separator = " "): out(out), endline(endline), separator(separator) {}template<class T> inline Output& operator<<(const T &s) {put(this->out, s);return *this;}template<class T> inline void operator()(const T &val) {*this << val << this->endline;}template<class T, class ...Args> inline void operator()(const T &head, const Args& ...tail) {*this << head << this->separator;(*this)(tail...);}template<class I, class = typename I::value_type> inline void operator()(const I first, const I last) {for(I itr=first; itr!=last;) {*this << *itr;if(++itr == last) *this << this->endline;else *this << this->separator;}}template<class T> inline void operator()(const std::initializer_list<T> vals) {std::vector wrapped(vals.begin(), vals.end());(*this)(wrapped.begin(), wrapped.end());}template<class F, class S> inline void operator()(const std::pair<F,S> &p) {(*this)(p.first, p.second);}};
+/* [output.hpp] */
+
+Output _print;
+#define print _print
+/* #endregion */
+
+#include <atcoder/segtree>
+using namespace atcoder;
+
+/* #expanded [range_addition.hpp] */
+#include <memory>
+#include <numeric>
+#include <algorithm>
+/* #expanded [range_sum.hpp] */
+#include <iterator>
+#include <initializer_list>
+#include <atcoder/fenwicktree>
+/* #expanded [dev_assert.hpp] */
+#ifdef LOCAL_JUDGE
+#include <cassert>
+#define dev_assert(...) assert(__VA_ARGS__)
+#else
+#define dev_assert(...) ({ ; })
+#endif
+/* [dev_assert.hpp] */
+template<class T> struct RangeSum : atcoder::fenwick_tree<T> {protected:int _n;public:RangeSum(const int n = 0) : atcoder::fenwick_tree<T>(n+1) { this->_n = n; }RangeSum(std::initializer_list<T> init_list) : RangeSum(ALL(init_list)) {}template<class I>RangeSum(const I first, const I last) : RangeSum(std::distance(first, last)) {for(auto itr=first; itr!=last; ++itr) this->set(itr-first, *itr);}inline int size() const {return this->_n;}inline T get(const int p) {dev_assert(0 <= p and p < this->size());return this->sum(p, p+1);}inline void set(const int p, const T x) {dev_assert(0 <= p and p < this->size());this->add(p, x - this->get(p));}inline std::vector<T> _debug() {std::vector<T> res(this->size());REP(i, this->size()) res[i] = this->get(i);return res;}};
+/* [range_sum.hpp] */
+/* #expanded [adjacent_difference.hpp] */
+#include <iterator>
+#include <vector>
+#include <functional>
+#include <numeric>
+/* #expanded [types.hpp] */
+#include <cstdint>
+namespace Internal {using Size = std::int32_t;}
+/* [types.hpp] */
+template<class T, class Container = std::vector<T>>struct AdjacentDifference : Container {public:AdjacentDifference() {}template<class I, class Operator = std::minus<T>>AdjacentDifference(const I first, const I last, const bool remove_first = true, const Operator op = std::minus<T>{}) {this->resize(distance(first, last));std::adjacent_difference(first, last, begin(*this), op);if(remove_first) this->erase(begin(*this));}};
+/* [adjacent_difference.hpp] */
+template<class T> struct RangeAddition {protected:RangeSum<T> difference;using Size = int;private:Size _n;public:RangeAddition(const Size n = 0) : difference(n) { this->_n = n; }RangeAddition(std::initializer_list<T> init_list) : RangeAddition(ALL(init_list)) {}template<class I> RangeAddition(const I first, const I last) : RangeAddition(std::distance(first, last)) {AdjacentDifference<T> diff(first, last, false);REP(i, diff.size()) this->difference.set(i, diff[i]);}inline Size size() const { return this->_n; }inline void add(const Size l, const Size r, const T v) {dev_assert(0 <= l and l <= r and r <= this->size());this->difference.add(l, v);this->difference.add(r, -v);}inline T get(const Size p) {dev_assert(0 <= p and p < this->size());return this->difference.sum(0, p+1);}inline std::vector<T> _debug() {std::vector<T> res(this->size());REP(i, this->size()) res[i] = this->get(i);return res;}};
+/* [range_addition.hpp] */
+
+ll op(ll a, ll b) { return a + b; }
+ll e() { return 0; }
+
+signed main() {
+    int n, q; cin >> n >> q;
+
+    RangeAddition<ll> data(n);
+    debug(data);
+
+    LOOP(q) {
+        int t; cin >> t;
+        if(t == 0) {
+            int l, r, v; cin >> l >> r >> v; --l;
+            data.add(l, r, v);
+        }
+        if(t == 1) {
+            int k; cin >> k; --k;
+            print(data.get(k));
+        }
+        debug(data);
+    }
+
+    return 0;
+}
