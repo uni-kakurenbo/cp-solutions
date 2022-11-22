@@ -52,7 +52,6 @@ template<class T> inline bool chmax(T &a, T b) { return (a<b ? a=b, true : false
 template<class T> inline bool chmin(T &a, T b) { return (a>b ? a=b, true : false); }
 /* #endregion */
 
-
 signed main() {
     int n, m; cin >> n >> m;
     vector<vector<int>> ans;
