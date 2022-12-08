@@ -452,23 +452,20 @@ struct Modifier {
   public:
     Modifier(const Grid *const grid) : grid(grid) {}
 
-    inline Neighbor choose(const Board &) const {
-        return 0;
+    inline Neighbor choose(const Timer::Progress &progress) const {
+        return 30 - 20 * progress;
     }
 
     inline bool apply(Board *const board, const Neighbor neighbor) const {
-        if(neighbor == 0) {
-            Position start;
-            do { start = random_engine(AREA); } while(not board->directed(start));
+        Position start;
+        do { start = random_engine(AREA); } while(not board->directed(start));
 
-            Point goal = this->destroy(board, start, 30);
+        Point goal = this->destroy(board, start, neighbor);
 
-            constexpr int shuffle[4] = { 0, 1, 2, 3 };
-            Timer timer(10);
+        constexpr int shuffle[4] = { 0, 1, 2, 3 };
+        Timer timer(10);
 
-            return this->dfs(board, start, goal, shuffle, timer, 200);
-        }
-        return false;
+        return this->dfs(board, start, goal, shuffle, timer, 5*neighbor);
     }
 
     inline Point destroy(Board *const board, const Point start, const Position length) const {
@@ -603,7 +600,7 @@ struct Annealer : private Uncopyable {
 
             state.save();
 
-            auto neighboor = this->modifier.choose(state.current());
+            auto neighboor = this->modifier.choose(progress);
             const bool successful = this->modifier.apply(&state.current(), neighboor);
 
             if(not successful) {
