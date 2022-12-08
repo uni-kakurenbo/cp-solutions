@@ -28,9 +28,7 @@ function run_case() {
     local started_at ended_at
     started_at=$(date +%s.%N)
 
-    # shellcheck disable=SC2086
-    cargo run --release --bin tester $executin_command <"$file" >"$case/$case_name.res" 2>"$case/$case_name.log"
-    echo $? >"$case/$case_name.info"
+    $executin_command <"$file" >"$case/$case_name.res" 2>"$case/$case_name.log"
 
     ended_at=$(date +%s.%N)
 
@@ -42,6 +40,6 @@ function run_case() {
 
 export -f run_case
 
-find "$CASE_ID" -name "*.txt" -print0 | xargs -0 -L 1 -P "$PARALLEL" -I {} bash -c "run_case '$CASE_ID' '$EXECUTION_COMMAND' {}"
+find "$CASE_ID" -name "*.txt" -print0 | xargs -0 -P "$PARALLEL" -I {} bash -c "run_case '$CASE_ID' '$EXECUTION_COMMAND' {}"
 echo
 ./calc_score.sh "$CASE_ID"

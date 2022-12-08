@@ -85,39 +85,35 @@ struct Stack : protected std::stack<T,std::vector<T>> {
     void reserve(size_type n) { this->c.reserve(n); }
 };
 
-struct Timer : private Uncopyable {
-    using Time = std::int32_t;
+struct XorShift {
+    using result_type = std::uint32_t;
+
+    static constexpr result_type MIN = std::numeric_limits<result_type>::min();
+    static constexpr result_type MAX = std::numeric_limits<result_type>::max();
+
+    static constexpr result_type min() { return MIN; }
+    static constexpr result_type max() { return MAX; }
+
+    inline void seed(unsigned int seed) { this->x = seed; }
+
+    XorShift(uint32_t seed = 3141592653UL) : x(seed) {};
+
+    inline uint32_t operator()() {
+        uint32_t t;
+
+        t = x ^ (x << 11);
+        x = y; y = z; z = w;
+        return w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
+    }
 
   private:
-    const Time time_limit;
-    std::chrono::system_clock::time_point clock_start;
-
-  public:
-    using Progress = double;
-
-    Timer(const Time time_limit = 0) : time_limit(time_limit), clock_start(std::chrono::system_clock::now()) {}
-
-    inline Time limit() {
-        return this->time_limit;
-    }
-
-    inline Timer* reset() {
-        clock_start = std::chrono::system_clock::now();
-        return this;
-    }
-
-    inline Time elapsed() const {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - this->clock_start).count();
-    }
-    inline Time remaining () const {
-        return time_limit - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - this->clock_start).count();
-    }
-
-    inline bool expired() const { return this->elapsed() > time_limit; }
-    inline Progress progress() const { return static_cast<Progress>(this->elapsed()) / this->time_limit; }
+    uint32_t x = 123456789;
+    uint32_t y = 362436069;
+    uint32_t z = 521288629;
+    uint32_t w = 88675123;
 };
 
-template<class Engine = std::mt19937>
+template<class Engine = XorShift>
 struct RandomEngine : private Uncopyable {
     using result_type = typename Engine::result_type;
     using signed_result_type = typename std::make_signed_t<result_type>;
@@ -150,6 +146,38 @@ struct RandomEngine : private Uncopyable {
     template<class T = double> inline T real() const {
         return static_cast<T>(this->engine() + 0.5) / (1.0 + this->max());
     }
+};
+
+struct Timer : private Uncopyable {
+    using Time = std::int32_t;
+
+  private:
+    const Time time_limit;
+    std::chrono::system_clock::time_point clock_start;
+
+  public:
+    using Progress = double;
+
+    Timer(const Time time_limit = 0) : time_limit(time_limit), clock_start(std::chrono::system_clock::now()) {}
+
+    inline Time limit() {
+        return this->time_limit;
+    }
+
+    inline Timer* reset() {
+        clock_start = std::chrono::system_clock::now();
+        return this;
+    }
+
+    inline Time elapsed() const {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - this->clock_start).count();
+    }
+    inline Time remaining () const {
+        return time_limit - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - this->clock_start).count();
+    }
+
+    inline bool expired() const { return this->elapsed() > time_limit; }
+    inline Progress progress() const { return static_cast<Progress>(this->elapsed()) / this->time_limit; }
 };
 
 // 地点
@@ -513,11 +541,11 @@ struct Modifier {
 struct Annealer : private Uncopyable {
   private:
     template<class Data> struct State {
-    private:
+      private:
         Data _current, _best, _saved;
         Outputter *logger = nullptr;
 
-    public:
+      public:
         State(const Data &init) : _current(init), _best(init), _saved(init) {}
         State(const Data &init, Outputter *const logger) : State(init) { this->logger = logger; }
 
@@ -525,11 +553,15 @@ struct Annealer : private Uncopyable {
         inline const Data& best() const { return this->_best; }
         inline const Data& saved() const { return this->_saved; }
 
-        inline void update_best() { this->_best = this->_current; }
+        inline void update_best() {
+            this->_best = this->_current;
+            if constexpr(DEVELOPMEMT_MODE) debug(this->_best.score());
+        }
         inline void save() {  this->_saved = this->_current; }
         inline void rollback() { this->_current = this->_saved; }
         // inline void save() { logger->print_answer(this->_current), debug(this->_current); this->_saved = this->_current; }
     };
+
     const Modifier &modifier;
 
     double start_temp, end_temp, temp_range;
@@ -542,7 +574,10 @@ struct Annealer : private Uncopyable {
     Board anneal(Board const &board, const Timer &timer, Outputter *const logger = nullptr) {
         State<Board> state(board, logger);
 
-        while(not timer.expired()) {
+        int count = 0;
+        while(true) {
+            if(++count%1000 == 0 and timer.expired()) break;
+
             const auto progress = timer.progress();
             const double temp = this->start_temp + this->temp_range * progress;
 
@@ -576,8 +611,8 @@ struct Solver : private Uncopyable {
 
     const Modifier modifier;
 
-    static constexpr Timer::Time TIME_LIMIT_MS = 1950;
-    static constexpr Timer::Time INITIALIZATION_TIME_LIMIT_MS = 50;
+    static constexpr Timer::Time TIME_LIMIT_MS = 1980;
+    static constexpr Timer::Time INITIALIZATION_TIME_LIMIT_MS = 10;
 
     Board best_board;
 
