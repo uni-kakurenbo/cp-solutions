@@ -210,7 +210,7 @@ struct Grid : private Uncopyable {
     std::array<Value,AREA> _values;
 
     inline bool same(Point p, Point q) const {
-        return this->tile_dirc(p) == this->tile_dirc(q);
+        return this->tile_direction(p) == this->tile_direction(q);
     }
 
     inline constexpr Direction inversed(const Direction dir) { return (dir+2)%4; }
@@ -229,7 +229,7 @@ struct Grid : private Uncopyable {
         for(Position row=0; row<SIZE; ++row) {
             for(Position col=0; col<SIZE; ++col) {
                 Position p = Point{row, col}.id();
-                if(this->tile_dirc(p) >= 0) continue;
+                if(this->tile_direction(p) >= 0) continue;
                 for(Direction dir=0; dir<2; ++dir) {
                     Point adj = Point(row + DRS[dir], col + DCS[dir]);
                     if(adj.row < 0 or adj.row >= SIZE) continue;
@@ -244,16 +244,16 @@ struct Grid : private Uncopyable {
         }
     }
 
-    inline Direction tile_dirc(const Position pos) const {
+    inline Direction tile_direction(const Position pos) const {
         return this->_tiles[pos];
     }
-    inline Direction tile_dirc(const Point &point) const {
-        return tile_dirc(point.id());
+    inline Direction tile_direction(const Point &point) const {
+        return tile_direction(point.id());
     }
 
     inline Point same_point(const Point &point) const {
-        if(this->tile_dirc(point) < 0) return point;
-        Direction dir = this->tile_dirc(point.id());
+        if(this->tile_direction(point) < 0) return point;
+        Direction dir = this->tile_direction(point.id());
         return Point(point.row + DRS[dir], point.col + DCS[dir]);
     }
 
@@ -495,7 +495,7 @@ struct Modifier {
 
                 std::vector<std::pair<Priority, Direction>> dirs; dirs.reserve(4);
                 for(Direction dir=0; dir<4; ++dir) {
-                    if(this->grid->tile_dirc(point) == shuffle[dir]) continue;
+                    if(this->grid->tile_direction(point) == shuffle[dir]) continue;
 
                     Point next = Point(point.row + DRS[shuffle[dir]], point.col + DCS[shuffle[dir]]);
 
