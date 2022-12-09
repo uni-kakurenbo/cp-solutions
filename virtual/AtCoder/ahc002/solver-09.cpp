@@ -96,7 +96,8 @@ struct XorShift {
 
     inline void seed(unsigned int seed) { this->x = seed; }
 
-    XorShift(uint32_t seed = 3141592653UL) : x(seed) {};
+    XorShift() {};
+    XorShift(uint32_t seed) : x(seed) {};
 
     inline uint32_t operator()() {
         uint32_t t;
@@ -144,7 +145,8 @@ struct RandomEngine : private Uncopyable {
     };
 
     template<class T = double> inline T real() const {
-        return static_cast<T>(this->engine() + 0.5) / (1.0 + this->max());
+        constexpr T p = 1.0 + this->max();
+        return static_cast<T>(this->engine() + 0.5) / p;
     }
 };
 
@@ -314,6 +316,9 @@ struct Board {
         this->_score = this->grid().value(this->start());
     }
 
+    inline bool operator<(const Board &other) const { return this->_score < other._score; }
+    inline bool operator>(const Board &other) const { return this->_score > other._score; }
+
     inline bool terminated(const Position point) const { return point == this->_terminator0 or point == this->_terminator1; }
     inline bool terminated(const Point point) const { return this->terminated(point.id()); }
 
@@ -466,12 +471,15 @@ struct Modifier {
     }
 
     inline bool apply(Board *const board, const Neighbor neighbor) const {
+        static constexpr int shuffle[4] = { 0, 1, 2, 3 };
+
+        // if(std::hash<Neighbor>()(neighbor)%100 == 0) std::swap(shuffle[random_engine(std::size(shuffle))], shuffle[random_engine(std::size(shuffle))]);
+
         Position start;
         do { start = random_engine(AREA); } while(not board->directed(start));
 
         Point goal = this->destroy(board, start, neighbor);
 
-        constexpr int shuffle[4] = { 0, 1, 2, 3 };
         Timer timer(10);
 
         return this->dfs(board, start, goal, shuffle, timer, 5*neighbor);
@@ -576,11 +584,11 @@ struct Annealer : private Uncopyable {
         inline const Data& saved() const { return this->_saved; }
 
         inline void update_best() {
-            this->_best = this->_current;
+            if(this->_current > this->_best) this->_best = this->_current;
             if constexpr(DEVELOPMEMT_MODE) debug(this->_best.score());
         }
         inline void save() {  this->_saved = this->_current; }
-        inline void rollback() { this->_current = this->_saved; }
+        inline void rollback() { std::swap(this->_current, this->_saved); }
         // inline void save() { logger->print_answer(this->_current), debug(this->_current); this->_saved = this->_current; }
     };
 
@@ -620,9 +628,7 @@ struct Annealer : private Uncopyable {
             Score score_change = state.current().score() - state.saved().score();
 
             const double appling_probability = score_change > 0 ? 1 : std::exp(score_change / temp);
-            if(appling_probability > random_engine.real()) {
-                if(state.best().score() < state.current().score()) { state.update_best(); }
-            }
+            if(appling_probability > random_engine.real()) state.update_best();
             else state.rollback();
         }
 
@@ -658,7 +664,7 @@ struct Solver : private Uncopyable {
         logger.print_answer(this->best_board);
         debug(this->best_board);
 
-        Annealer annealer(modifier, 200, 10);
+        Annealer annealer(modifier, 180, 10);
         this->best_board = annealer.anneal(this->best_board, timer, &logger);
 
         logger.print_answer(this->best_board);

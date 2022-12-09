@@ -96,7 +96,8 @@ struct XorShift {
 
     inline void seed(unsigned int seed) { this->x = seed; }
 
-    XorShift(uint32_t seed = 3141592653UL) : x(seed) {};
+    XorShift() {};
+    XorShift(uint32_t seed) : x(seed) {};
 
     inline uint32_t operator()() {
         uint32_t t;
@@ -466,12 +467,15 @@ struct Modifier {
     }
 
     inline bool apply(Board *const board, const Neighbor neighbor) const {
+        static constexpr int shuffle[4] = { 0, 1, 2, 3 };
+
+        // if(std::hash<Neighbor>()(neighbor)%100 == 0) std::swap(shuffle[random_engine(std::size(shuffle))], shuffle[random_engine(std::size(shuffle))]);
+
         Position start;
         do { start = random_engine(AREA); } while(not board->directed(start));
 
         Point goal = this->destroy(board, start, neighbor);
 
-        constexpr int shuffle[4] = { 0, 1, 2, 3 };
         Timer timer(10);
 
         return this->dfs(board, start, goal, shuffle, timer, 5*neighbor);
