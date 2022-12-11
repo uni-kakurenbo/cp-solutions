@@ -19,7 +19,7 @@ Output _print;
 #define print _print
 /* #endregion */
 
-bool validate(
+bool ng(
     const int ax, const int ay,
     const int bx, const int by,
     const int cx, const int cy,
@@ -28,17 +28,17 @@ bool validate(
     const int p0 = (bx - ax) * (ty - ay) - (by - ay) * (tx - ax);
     const int p1 = (cx - bx) * (ty - by) - (cy - by) * (tx - bx);
     const int p2 = (ax - cx) * (ty - cy) - (ay - cy) * (tx - cx);
-    return p0 > 0 and p1 > 0 and p2 > 0) or (p0 < 0 and p1 < 0 and p2 < 0;
+    return (p0 > 0 and p1 > 0 and p2 > 0) or (p0 < 0 and p1 < 0 and p2 < 0);
 }
 
 signed main() {
     int px[4], py[4];
     REP(i, 4) cin >> px[i] >> py[i];
 
+    bool valid = true;
     REP(i, 4) {
-        bool valid = true;
         if(
-            not validate(
+            ng(
                 px[i%4], py[i%4],
                 px[(i+1)%4], py[(i+1)%4],
                 px[(i+2)%4], py[(i+2)%4],
