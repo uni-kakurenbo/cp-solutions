@@ -1,0 +1,609 @@
+/*
+ * @uni_kakurenbo
+ * https://github.com/uni-kakurenbo/competitive-programming-workspace
+ *
+ * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
+ */
+ /* #language C++ GCC */
+
+// #pragma GCC target("avx")
+// #pragma GCC optimize("Ofast")
+// #pragma GCC optimize("unroll-loops")
+
+#include <iostream>
+
+#include <cstdint>
+#include <cassert>
+#include <cmath>
+
+#include <utility>
+#include <tuple>
+#include <chrono>
+#include <random>
+
+#include <algorithm>
+#include <numeric>
+#include <memory>
+#include <optional>
+
+#include <array>
+#include <unordered_set>
+#include <vector>
+#include <stack>
+#include <list>
+
+#ifdef LOCAL_JUDGE
+
+#include<debug>
+#define debug(...) Debug::debug(Debug::split(#__VA_ARGS__), 0, __LINE__, __VA_ARGS__)
+#define DEBUG(...) do { Debug::DEBUG(nintptr, "\033[3;35m#" + to_string(__LINE__) + "\033[m  "); Debug::DEBUG(__VA_ARGS__); Debug::DEBUG(nintptr, "\033[m\n"); } while(0);
+
+#define dev_assert(...) assert(__VA_ARGS__)
+
+constexpr bool DEVELOPMEMT_MODE = true;
+
+#else
+
+#define debug(...) { ; }
+#define DEBUG(...) { ; }
+#define dev_assert(...) { ; }
+
+constexpr bool DEVELOPMEMT_MODE = false;
+
+#endif
+
+#define INF32 2147483647
+
+using Position = std::int16_t;
+using Direction = std::int16_t;
+
+using Score = std::int32_t;
+
+constexpr Position SIZE = 50;
+constexpr Position AREA = SIZE*SIZE;
+
+constexpr Position DRS[] = { -1, 0, 1, 0 }, DCS[] = { 0, 1, 0, -1 };
+constexpr const char * DIRECTIONS = "URDL";
+
+struct Uncopyable {
+    Uncopyable(){}
+    Uncopyable(const Uncopyable&) = delete;
+    Uncopyable& operator=(const Uncopyable&) = delete;
+};
+
+template<class T>
+struct Stack : protected std::stack<T,std::vector<T>> {
+    using size_type = std::size_t;
+
+    using std::stack<T,std::vector<T>>::empty;
+    using std::stack<T,std::vector<T>>::size;
+    using std::stack<T,std::vector<T>>::top;
+    using std::stack<T,std::vector<T>>::push;
+    using std::stack<T,std::vector<T>>::pop;
+
+    void reserve(size_type n) { this->c.reserve(n); }
+};
+
+struct Timer : private Uncopyable {
+    using Time = std::int32_t;
+
+  private:
+    const Time time_limit;
+    std::chrono::system_clock::time_point clock_start;
+
+  public:
+    using Progress = double;
+
+    Timer(const Time time_limit = 0) : time_limit(time_limit), clock_start(std::chrono::system_clock::now()) {}
+
+    inline Time limit() {
+        return this->time_limit;
+    }
+
+    inline Timer* reset() {
+        clock_start = std::chrono::system_clock::now();
+        return this;
+    }
+
+    inline Time elapsed() const {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - this->clock_start).count();
+    }
+    inline Time remaining () const {
+        return time_limit - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - this->clock_start).count();
+    }
+
+    inline bool expired() const { return this->elapsed() > time_limit; }
+    inline Progress progress() const { return static_cast<Progress>(this->elapsed()) / this->time_limit; }
+};
+
+template<class Engine = std::mt19937>
+struct RandomEngine : private Uncopyable {
+    using result_type = typename Engine::result_type;
+    using signed_result_type = typename std::make_signed_t<result_type>;
+
+  private:
+    mutable Engine engine;
+
+  public:
+    static constexpr result_type MIN = Engine::min();
+    static constexpr result_type MAX = Engine::max();
+
+    static constexpr result_type min() { return MIN; }
+    static constexpr result_type max() { return MAX; }
+
+    RandomEngine(unsigned long seed = 3141592653UL) { this->engine.seed(seed); };
+
+    inline result_type operator()() const {
+        return this->engine();
+    }
+
+    inline result_type operator()(result_type max) const {
+        if(max == 0) return 0;
+        return (*this)() % max;
+    }
+    inline signed_result_type operator()(signed_result_type min, signed_result_type max) const {
+        dev_assert(min <= max);
+        return min + (*this)(max - min);
+    };
+
+    template<class T = double> inline T real() const {
+        return static_cast<T>(this->engine()) / this->max();
+    }
+};
+
+// 地点
+struct Point {
+    Position row, col;
+
+    Point(const Position row, const Position col) : row(row), col(col) {}
+    Point(const Position id) : row(id/SIZE), col(id%SIZE) {}
+
+    Position id() const { return this->row*SIZE + this->col; }
+
+    inline bool operator==(const Point& other) const {
+        return this->row == other.row and this->col == other.col;
+    }
+    inline bool operator!=(const Point& other) const {
+        return not (*this == other);
+    }
+
+    inline std::pair<Position, Position> _debug() const {
+        return { this->row, this->col };
+    }
+};
+
+// 入力された盤面の情報．コピーされない．
+struct Grid : private Uncopyable {
+    using Value = std::int16_t;
+
+  private:
+    std::array<Direction,AREA> _tiles;
+    std::array<Value,AREA> _values;
+
+    inline bool same(Point p, Point q) const {
+        return this->tile_dirc(p) == this->tile_dirc(q);
+    }
+
+    inline constexpr Direction inversed(const Direction dir) { return (dir+2)%4; }
+
+  public:
+    Grid() : _tiles(), _values() {}
+
+    void read() {
+        this->_tiles.fill(-1);
+
+        std::array<Direction,AREA> tile_numbers;
+
+        for(Position pos=0; pos<AREA; ++pos) std::cin >> tile_numbers[pos];
+        for(Position pos=0; pos<AREA; ++pos) std::cin >> this->_values[pos];
+
+        for(Position row=0; row<SIZE; ++row) {
+            for(Position col=0; col<SIZE; ++col) {
+                Position p = Point{row, col}.id();
+                if(this->tile_dirc(p) >= 0) continue;
+                for(Direction dir=0; dir<2; ++dir) {
+                    Point adj = Point(row + DRS[dir], col + DCS[dir]);
+                    if(adj.row < 0 or adj.row >= SIZE) continue;
+                    if(adj.col < 0 or adj.col >= SIZE) continue;
+                    Position q = adj.id();
+                    if(tile_numbers[p] == tile_numbers[q]) {
+                        this->_tiles[p] = dir;
+                        this->_tiles[q] = inversed(dir);
+                    }
+                }
+            }
+        }
+    }
+
+    inline Direction tile_dirc(const Position pos) const {
+        return this->_tiles[pos];
+    }
+    inline Direction tile_dirc(const Point &point) const {
+        return tile_dirc(point.id());
+    }
+
+    inline Point same_point(const Point &point) const {
+        if(this->tile_dirc(point) < 0) return point;
+        Direction dir = this->tile_dirc(point.id());
+        return Point(point.row + DRS[dir], point.col + DCS[dir]);
+    }
+
+    inline Value value(const Position pos) const {
+        return this->_values[pos];
+    }
+    inline Value value(const Point &point) const {
+        return value(point.id());
+    }
+};
+
+// 盤面を保持
+struct Board {
+    enum class Type : std::int8_t { Empty, Up, Right, Down, Left, Passed };
+
+  private:
+    const Grid *_grid = nullptr;
+    Score _score = 0;
+
+    std::array<Type,AREA> _data;
+
+    inline Type set_direction(const Position point, const Direction dir) {
+        if(dir == 0) return this->_data[point] = Type::Up;
+        if(dir == 1) return this->_data[point] = Type::Right;
+        if(dir == 2) return this->_data[point] = Type::Down;
+        if(dir == 3) return this->_data[point] = Type::Left;
+        if(dir == -1) return this->_data[point] = Type::Passed;
+        assert(false);
+    }
+
+  public:
+    Board() : _data() {}
+    Board(const Grid *grid, const Point start) : _grid(grid) {
+        this->_data.fill(Type::Empty);
+        this->_score = this->_grid->value(start);
+    }
+
+    static constexpr bool empty(const Type type) { return type == Type::Empty; };
+    inline bool empty(const Position pos) const { return Board::empty(this->_data[pos]); }
+    inline bool empty(const Point point) const { return this->empty(point.id()); }
+
+    static constexpr bool passed(const Type type) { return type == Type::Passed; };
+    inline bool passed(const Position pos) const { return Board::passed(this->_data[pos]); }
+    inline bool passed(const Point point) const { return this->passed(point.id()); }
+
+
+    static constexpr bool directed(const Type type) { return not empty(type) and not passed(type); };
+    inline bool directed(const Position pos) const { return Board::directed(this->_data[pos]); }
+    inline bool directed(const Point point) const { return this->directed(point.id()); }
+
+
+    inline Score score() const { return this->_score; }
+
+    inline Point put(const Point &point, const Direction dir) {
+        auto p = point.id(), q = this->_grid->same_point(point).id();
+        dev_assert(this->empty(p)); dev_assert(this->empty(q));
+
+        this->set_direction(q, -1), this->set_direction(p, dir);
+
+        auto next = Point(point.row + DRS[dir], point.col + DCS[dir]);
+        this->_score += this->_grid->value(next);
+
+        return next;
+    }
+
+    inline Point advanced(const Point &point) const {
+        auto dir = this->direction(point);
+        return Point(point.row + DRS[dir], point.col + DCS[dir]);
+    }
+
+    inline void pop(const Point &point, const Point &score_source) {
+        auto p = point.id(), q = this->_grid->same_point(point).id();
+        if(not this->directed(p)) debug(point);
+        dev_assert(this->directed(p)); dev_assert(p == q or this->passed(q));
+
+        this->_score -= this->_grid->value(score_source);
+        this->_data[p] = this->_data[q] = Type::Empty;
+    }
+
+    inline Point pop_forward(const Point &point) {
+        return this->pop_forward(point, this->advanced(point));
+    }
+    inline Point pop_forward(const Point &point, const Point &score_source) {
+        this->pop(point, score_source);
+        return score_source;
+    }
+
+    inline Point pop_backward(const Point &point) {
+        return this->pop_backward(point, this->advanced(point));
+    }
+    inline Point pop_backward(const Point &point, const Point &score_source) {
+        this->pop(point, score_source);
+        return point;
+    }
+
+    inline bool can_set(const Point &point) const {
+        if(point.row < 0 or point.row >= SIZE) return false;
+        if(point.col < 0 or point.col >= SIZE) return false;
+        return this->empty(point);
+    }
+    inline bool can_move(const Point &point, const Direction dir) const {
+        Point next = Point(point.row + DRS[dir], point.col + DCS[dir]);
+        return this->can_set(next);
+    }
+
+    inline Direction direction(const Point &point) const {
+        auto type = this->_data[point.id()];
+        if(type == Type::Up) return 0;
+        if(type == Type::Right) return 1;
+        if(type == Type::Down) return 2;
+        if(type == Type::Left) return 3;
+        if(type == Type::Passed) return -1;
+        if(type == Type::Empty) return -2;
+        assert(false);
+    }
+
+    std::string _debug() const {
+        constexpr const char* CHIPS = ".A>V<-";
+        std::string res = "\n";
+        for(Position row=0; row<SIZE; ++row) {
+            for(Position col=0; col<SIZE; ++col) {
+                res += CHIPS[static_cast<std::underlying_type_t<Type>>(this->_data[Point{row, col}.id()])];
+            }
+            res += "\n";
+        }
+        return res;
+    }
+};
+
+inline void print_answer(std::ostream *out, const std::string answer) {
+    *out << answer << "\n";
+}
+
+inline void print_answer(std::ostream *out, const std::string answer, std::ostream *log, const Score score) {
+    *log << score << "\n";
+    print_answer(out, answer);
+}
+
+RandomEngine random_engine;
+
+struct Modifier {
+    using Neighbor = std::int8_t;
+
+  private:
+    const Grid *grid;
+
+  public:
+    Modifier(const Grid *const grid) : grid(grid) {}
+
+    inline Neighbor choose(const Board &) const {
+        return 0;
+    }
+
+    inline bool apply(Board *const board, const Neighbor neighbor) const {
+        if(neighbor == 0) {
+            Position start;
+            do { start = random_engine(AREA); } while(not board->directed(start));
+
+            Point goal = this->destroy(board, start, 30);
+
+            constexpr int shuffle[4] = { 0, 1, 2, 3 };
+            Timer timer(1);
+
+            bool res = this->dfs(board, start, goal, shuffle, timer);
+            return res;
+        }
+        return false;
+    }
+
+    inline Point destroy(Board *const board, const Point start, const Position length) const {
+        dev_assert(board->directed(start));
+        Point point = start;
+
+        Position count = 0;
+        while(count++ < length and board->directed(point)) {
+            point = board->pop_forward(point);
+        }
+        return point;
+    }
+
+    inline bool dfs(
+        Board *const board,
+        const Point start, const Point goal,
+        const int shuffle[4], const Timer &timer,
+        Board *const best_board = nullptr
+    ) const {
+        using Priority = std::make_signed_t<Position>;
+
+        Stack<std::common_type_t<Direction,Position>> stack;
+
+
+        Point point = start;
+        stack.push(100);
+
+        int count = 0;
+        while(point != goal) {  // DFS
+            if(++count%100 == 0 and timer.expired()) return false;
+            if(stack.empty()) return (debug("empty")), false;
+
+            auto motion = stack.top(); stack.pop();
+            if(motion >= 0) {  // 上り
+                Point prev_point = point;
+                if(motion < 4) {
+                    point = board->put(point, motion);
+                }
+
+                std::vector<std::pair<Priority, Direction>> dirs; dirs.reserve(4);
+                for(Direction dir=0; dir<4; ++dir) {
+                    if(this->grid->tile_dirc(point) == shuffle[dir]) continue;
+
+                    Point next = Point(point.row + DRS[shuffle[dir]], point.col + DCS[shuffle[dir]]);
+                    if(next != goal and not board->can_set(next)) continue;
+
+                    if(best_board == nullptr) {
+                        dirs.emplace_back(random_engine(), dir);
+                        continue;
+                    }
+
+                    constexpr Position MID = SIZE/2;
+                    const Position dr = next.row - MID;
+                    const Position dc = next.col - MID;
+
+                    const Priority priority = (dr * dr + dc * dc);
+
+                    dirs.emplace_back(priority, dir);
+                }
+                std::sort(dirs.begin(), dirs.end());  // 優先度の大きいものが後ろに来るように．
+
+                if(motion < 4) stack.push(-prev_point.id()-1);
+                for(const auto &[_, dir] : dirs) {
+                    stack.push(shuffle[dir]);
+                }
+            }
+            else {  // 下り
+                if(best_board != nullptr and board->score() > best_board->score()) {
+                    *best_board = *board;
+                }
+                // auto _history = board.history;
+                // std::string _answer; this->build_answer(&_answer, &_history); print_answer(&std::cout, _answer);
+                point = board->pop_backward(-motion-1, point);
+            }
+        }
+        // std::clog << "Loops: " << count << "\n";
+
+        return true;
+    }
+};
+
+template<class Data> struct State {
+  private:
+    Data _current, _best, _saved;
+
+  public:
+    State(const Data &init) : _current(init), _best(init), _saved() {}
+
+    inline Data& current() { return this->_current; }
+    inline const Data& best() const { return this->_best; }
+    inline const Data& saved() const { return this->_saved; }
+
+    inline void update_best() { this->_best = this->_current; }
+    inline void save() { this->_saved = this->_current; }
+    inline void rollback() { this->_current = this->_saved; }
+};
+
+struct Annealer : private Uncopyable {
+  private:
+    const Modifier &modifier;
+
+    double start_temp, end_temp, temp_range;
+
+  public:
+    Annealer(const Modifier &modifier, const double start_temp, const double end_temp)
+        : modifier(modifier), start_temp(start_temp), end_temp(end_temp), temp_range(end_temp - start_temp)
+    {}
+
+    Board anneal(Board const &board, const Timer &timer) {
+        State<Board> state(board);
+
+        while(not timer.expired()) {
+            const auto progress = timer.progress();
+            const double temp = this->start_temp + this->temp_range * progress;
+
+            state.save();
+
+            auto neighboor = this->modifier.choose(state.current());
+            bool successful = this->modifier.apply(&state.current(), neighboor);
+
+            if(not successful) {
+                state.rollback();
+                continue;
+            }
+
+            Score score_change = state.current().score() - state.saved().score();
+
+            const double appling_probability = score_change > 0 ? 1 : std::exp(score_change / temp);
+            if(appling_probability > random_engine.real()) {
+                if(state.best().score() < state.current().score()) state.update_best();
+            }
+            else state.rollback();
+        }
+
+        return state.best();
+    }
+};
+
+struct Solver : private Uncopyable {
+  private:
+    const Point initial_point;  // 初期位置
+    const Grid *grid = nullptr;  // 盤面
+
+    const Modifier modifier;
+
+    static constexpr Timer::Time TIME_LIMIT_MS = 1950;
+    static constexpr Timer::Time INITIALIZATION_TIME_LIMIT_MS = 50;
+
+    Board best_board;
+
+  public:
+    Solver(const Position sr, const Position sc, const Grid *const grid) : initial_point(sr, sc), grid(grid), modifier(grid) {}
+
+    Score solve(std::string *const answer) {
+        Timer timer(this->TIME_LIMIT_MS);
+
+        this->initial_solution();
+
+        Annealer annealer(modifier, 200, 10);
+        this->best_board = annealer.anneal(this->best_board, timer);
+
+        this->build_answer(answer);
+
+        return this->best_board.score();
+    }
+
+    inline void initial_solution() {
+        constexpr int shuffles[][4] = { { 0, 1, 2, 3 }, { 1, 2, 3, 0 } };  // 進行方向の優先順位 (いくつか試す)
+        Timer timer(this->INITIALIZATION_TIME_LIMIT_MS / std::size(shuffles));
+        for(const auto &shuffle : shuffles) {
+            timer.reset();
+
+            Board board(this->grid, this->initial_point);
+
+            this->modifier.dfs(&board, this->initial_point, Point{-1, -1}, shuffle, timer, &this->best_board);
+
+            std::clog << "Best internal score: " << this->best_board.score() << "\n";
+        }
+    }
+
+    inline void build_answer(std::string *const answer) const {
+        this->build_answer(answer, this->best_board);
+    }
+    inline void build_answer(std::string *const answer, const Board &source) const {
+        answer->clear();
+        Point point = this->initial_point;
+        while(source.directed(point)) {
+            auto dir = source.direction(point);
+            *answer += DIRECTIONS[dir];
+            point.row += DRS[dir], point.col += DCS[dir];
+        }
+        answer->pop_back();
+    }
+};
+
+inline void fast_io() { std::ios::sync_with_stdio(false), std::cin.tie(nullptr); }
+
+signed main() {
+    fast_io();
+
+    if constexpr (DEVELOPMEMT_MODE) std::clog << "Executed in development mode." << "\n";
+    else std::clog << "Executed in non-development mode." << "\n";
+
+    Position sr, sc; std::cin >> sr >> sc;
+    Grid grid; grid.read();
+
+    Solver solver(sr, sc, &grid);
+
+    std::string answer;
+    const Score score = solver.solve(&answer);
+
+    print_answer(&std::cout, answer, &std::clog, score);
+
+    return 0;
+}
