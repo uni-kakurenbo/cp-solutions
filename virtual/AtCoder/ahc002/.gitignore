@@ -7,6 +7,9 @@ vis/
 # tools
 tools/
 
+# others
+test/
+
 # binary
 *.exe
 
