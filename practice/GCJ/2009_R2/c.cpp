@@ -36,7 +36,7 @@ struct Solver {
             valarray<bool> less_i = data[i] < data[j];
             if(less_i.min()) G.add_edge(i, j);
         }
-        return G.minimum_paph_cover_as_dag();
+        return G.minimum_paph_cover_size_as_dag();
     }
 };
 
