@@ -22,7 +22,7 @@ signed main() {
     int n, k; cin >> n >> k;
     vector<int> a(n); REP(i, n) cin >> a[i];
 
-    BoundarySeeker<int> seeker([&](auto i) { return a[i] >= k; });
+    Lib::BoundarySeeker<int> seeker([&](auto i) { return a[i] >= k; });
     print(seeker.bound_or<true>(n-1, -1));
 
     return 0;

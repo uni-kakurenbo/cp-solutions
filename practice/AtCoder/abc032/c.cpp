@@ -39,7 +39,7 @@ signed main() {
     int ans = 0;
     auto apply = [&](auto l, auto r) { chmax(ans, r - l); };
 
-    InclusiveIntervalScanner<vector<ll>::iterator> scanner(validate, init, valid, expand, contract, apply);
+    Lib::InclusiveIntervalScanner<vector<ll>::iterator> scanner(validate, init, valid, expand, contract, apply);
     scanner.scan_all(ALL(a));
 
     print(ans);
