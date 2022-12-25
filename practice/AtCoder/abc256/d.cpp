@@ -16,12 +16,12 @@ Output _print;
 #define print _print
 /* #endregion */
 
-#include "data_structure/range_addition.hpp"
+#include "data_structure/range_add.hpp"
 
 signed main() {
     int n; cin >> n;
 
-    Lib::RangeAddition<int> v(200002);
+    Lib::RangeAdd<int> v(200002);
 
     LOOP(n) {
         int l, r; cin >> l >> r;

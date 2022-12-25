@@ -19,7 +19,7 @@ Output _print;
 #include <atcoder/segtree>
 using namespace atcoder;
 
-#include "data_structure/range_addition.hpp"
+#include "data_structure/range_add.hpp"
 using namespace Lib;
 
 ll op(ll a, ll b) { return a + b; }
@@ -28,7 +28,7 @@ ll e() { return 0; }
 signed main() {
     int n, q; cin >> n >> q;
 
-    RangeAddition<ll> data(n);
+    RangeAdd<ll> data(n);
     debug(data);
 
     LOOP(q) {

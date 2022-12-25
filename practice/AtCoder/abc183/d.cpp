@@ -16,13 +16,13 @@ Output _print;
 #define print _print
 /* #endregion */
 
-#include "data_structure/range_addition.hpp"
+#include "data_structure/range_add.hpp"
 #include "utility/applier.hpp"
 
 signed main() {
     int n, w; cin >> n >> w;
 
-    Lib::RangeAddition<ll> sum(200000);
+    Lib::RangeAdd<ll> sum(200000);
 
     REP(i, n) {
         int s, t, p; cin >> s >> t >> p;
