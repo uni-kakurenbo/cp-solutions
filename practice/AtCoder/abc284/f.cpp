@@ -12,14 +12,14 @@ using namespace std;
 #include "template.hpp"
 /* #endregion */
 
-#include "hash.hpp"
+#include "hash/sequence_hasher.hpp"
 
 signed main() {
     int n; cin >> n;
     string s; cin >> s;
     string t = s; reverse(ALL(t));
 
-    lib::hasher hash0(ALL(s)), hash1(ALL(t));
+    lib::sequence_hasher hash0(ALL(s)), hash1(ALL(t));
 
     int ans_i = -1;
 
