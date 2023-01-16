@@ -6,19 +6,17 @@
  */
 /* #language C++ GCC */
 #include <bits/stdc++.h>
+using namespace std;
 
 #include "template.hpp"
-#include "output.hpp"
 
+#include "graph.hpp"
 #include "graph/topological_sort.hpp"
-
-using namespace std;
-Output print;
 
 signed main() {
     int n, m; cin >> n >> m;
 
-    Graph<> G(n);
+    lib::graph G(n);
     vector<int> in_degs(n);
 
     REP(i, m) {
@@ -32,7 +30,7 @@ signed main() {
 
     if(ok) {
         ITRR(v, sorted) ++v;
-        print(ALL(sorted));
+        print(sorted);
     }
     else print(-1);
 

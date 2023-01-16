@@ -10,10 +10,6 @@
 using namespace std;
 
 #include "template.hpp"
-#include "output.hpp"
-
-Output _print;
-#define print _print
 /* #endregion */
 
 #include "utility/applier.hpp"
@@ -25,7 +21,7 @@ signed main() {
     int n, m; cin >> n >> m;
     vector<ll> h(n); ITRR(v, h) cin >> v;
 
-    Graph<> G(n);
+    lib::graph G(n);
     LOOP(m) {
         int u, v; cin >> u >> v; --u, --v;
         if(h[v] > h[u]) swap(u, v);
@@ -34,12 +30,12 @@ signed main() {
     }
     debug(G);
 
-    vector<ll> res(n, INF64);
+    vector<ll> res(n, LONG_LONG_MAX);
     G.dijkstra(0, &res);
 
     debug(res);
 
-    Max<ll> ans = 0;
+    lib::maximum<ll> ans = 0;
     REP(i, n) ans <<= h[0] - h[i] - res[i];
 
     print(ans);

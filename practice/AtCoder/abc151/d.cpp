@@ -10,29 +10,25 @@
 using namespace std;
 
 #include "template.hpp"
-#include "output.hpp"
-
-Output _print;
-#define print _print
 /* #endregion */
 
 #include "utility/applier.hpp"
 
 #include "grid.hpp"
 #include "graph.hpp"
-#include "graph/from_grid.hpp"
 #include "graph/bfs.hpp"
+#include "graph/from_grid.hpp"
 
 signed main() {
     int h, w; cin >> h >> w;
 
-    UnfoldedGrid<char> grid(h, w); grid.read();
-    Graph<> graph;
-    graph.from_grid(&grid);
+    lib::unfolded_grid<char> grid(h, w); grid.read();
+    lib::graph<> graph;
+    graph.from_grid(grid);
 
     debug(grid, graph);
 
-    Max<int> ans = -1;
+    lib::maximum<int> ans = -1;
 
     REP(si, h) REP(sj, w) {
         if(grid(si, sj) == '#') continue;
