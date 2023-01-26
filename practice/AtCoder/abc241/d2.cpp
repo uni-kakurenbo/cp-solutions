@@ -12,8 +12,7 @@ using namespace std;
 #include "template.hpp"
 /* #endregion */
 
-#include "data_structure/set.hpp"
-
+#include "adapter/set.hpp"
 
 signed main() {
     int q; cin >> q;
