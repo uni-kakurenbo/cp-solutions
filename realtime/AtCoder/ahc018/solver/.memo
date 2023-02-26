@@ -1,0 +1,121 @@
+Solver 00:
+- サンプルの再現
+
+Solver 01 extends 00:
+- 失敗
+
+Solver 02 extends 00:
+- Manhattan MST
+
+Solver 03 extends 02:
+- 効率化など
+
+Solver 04 extends 03:
+- 標高の予測を試みる
+
+Solver 05 extends 04:
+- 調整
+
+Solver 06 extends 05:
+- 調整
+
+Solver 07 extends 06:
+- 水のある場所から順に BFS 的に供給
+
+Solver 08 extends 06:
+- Refactor
+
+Solver 09 extends 09:
+- 山を回避しようとした
+- 失敗
+
+Solver 10 extends 08:
+- 01-BFS で経路の効率化．
+- 失敗
+
+Solver 11 extends 08:
+- サンプリングして標高の予測に挑戦
+- 案外いい感じ
+
+Solver 12 extends 11:
+- 近くの 3 点の標高のみを考えるように．
+- 周囲を 2500 の山で囲む
+
+Solver 13 extends 12:
+- Manhattan MST をやめて, K+W 頂点のグラフを構築．辺の重みは Dijkstra.
+
+Sover 14 extends 13:
+- 外周を山で囲うことをやめた
+- 外周の観測点を増やした．
+
+Solver 15 extends 14:
+- デカい山を避けようとした．
+- 失敗．
+- 山に囲まれた場所に家があったりすると詰む．
+
+Solver 16 extends 15:
+- 辺をつなぐ順番を，水源に近い順にソートするようにした．
+
+Solver 17 extends 16:
+- 掘削の最初のパワーに 予測値/3 を使うようにした
+- 微増
+
+Solver 18 extends 17:
+- パワーの初期値を 15 * sqrt(C) とした
+- 微増
+
+Solvers 19 extends 18:
+- 凸包で囲んで周辺のみを探索するように
+
+Solver 20 extends 19:
+- Dijkstra を A*
+- A* しながら周囲を格子状に区切って標高をサンプリング
+
+Solver 21 extends 20:
+- A* のヒューリスティック関数を修正
+    - Euclid 距離の 2 乗から Manhattan 距離の 2 乗に．
+
+Solver 22 extends 21, 18:
+- C <= 2**4: Solver 18
+- C >  2**4: Solver 21
+
+Solver 23 extends 21:
+- Refactor
+
+Solver 24 extends 23:
+- 案: A* を多点スタート，多点ゴールに．
+- 難しかった
+
+Solver 25 extends 23:
+- A* のヒューリスティック関数を修正
+    - Reached なら 0
+- ゴールに到達するタイミングを早めた
+- パラメータ調整
+
+Solver 26 extends 25:
+- 探索しながら最寄の水辺を目指す．
+
+Solver 27 extends 26:
+- 最寄の水辺でなく，最寄の水の流れている家も対象に
+
+Solver 28 extends 26:
+- さらに最寄の水の流れている区画の代表ますも対象に
+
+Solver 29 extends 28:
+- 水源の近くから順に探索するように．
+
+Solver 30 extends 29:
+- Refactor
+
+Solver 31 extends 18, 30:
+- Solver 18 を組み合わせた．
+- A* → 予想 → Dijkstra
+
+Solver 32 extends 30:
+
+
+
+
+改善案：
+- 水，家のある点の付近のみサンプリングしよう
+- 計測点だけ突起しているので，頑張って滑らかにしよう．
