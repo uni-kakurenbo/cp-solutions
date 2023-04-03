@@ -206,7 +206,7 @@ using cost_t = int;
 constexpr size_t N = 200;
 constexpr size_t S = N*N;
 
-template<class T> using pair = std::pair<T,T>;
+template<class T> using spair = std::pair<T,T>;
 
 enum class response { not_broken, broken, finish, invalid };
 
