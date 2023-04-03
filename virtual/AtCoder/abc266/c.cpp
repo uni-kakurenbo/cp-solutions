@@ -10,44 +10,22 @@
 using namespace std;
 
 #include "template.hpp"
-#include "input.hpp"
-#include "output.hpp"
-
-Input _input;
-Output _print;
-#define input _input
-#define print _print
 /* #endregion */
 
-bool ng(
-    const int ax, const int ay,
-    const int bx, const int by,
-    const int cx, const int cy,
-    const int tx, const int ty
-) {
-    const int p0 = (bx - ax) * (ty - ay) - (by - ay) * (tx - ax);
-    const int p1 = (cx - bx) * (ty - by) - (cy - by) * (tx - bx);
-    const int p2 = (ax - cx) * (ty - cy) - (ay - cy) * (tx - cx);
-    return (p0 > 0 and p1 > 0 and p2 > 0) or (p0 < 0 and p1 < 0 and p2 < 0);
+using point = lib::point<i64>;
+
+bool ng(point a, point b, point c, point t) {
+    const i64 p = lib::cross(b, t, a);
+    const i64 q = lib::cross(c, t, b);
+    const i64 r = lib::cross(a, t, c);
+    return (p > 0 and q > 0 and r > 0) or (p < 0 and q < 0 and r < 0);
 }
 
 signed main() {
-    int px[4], py[4];
-    REP(i, 4) cin >> px[i] >> py[i];
+    vector<point> ps(4); input >> ps;
 
-    bool valid = true;
-    REP(i, 4) {
-        if(
-            ng(
-                px[i%4], py[i%4],
-                px[(i+1)%4], py[(i+1)%4],
-                px[(i+2)%4], py[(i+2)%4],
-                px[(i+3)%4], py[(i+3)%4]
-            )
-        ) {
-            valid = false;
-        }
-    }
+    bool ok = true;
+    REP(i, 4) ok &= !ng(ps[i%4], ps[(i+1)%4], ps[(i+2)%4], ps[(i+3)%4]);
 
-    cout << (valid ? "Yes" : "No") << ln;
+    print(ok ? "Yes" : "No");
 }

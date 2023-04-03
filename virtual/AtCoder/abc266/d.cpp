@@ -10,49 +10,28 @@
 using namespace std;
 
 #include "template.hpp"
-#include "input.hpp"
-#include "output.hpp"
-
-Input _input;
-Output _print;
-#define input _input
-#define print _print
 /* #endregion */
-
-#include "multi_container.hpp"
-
-constexpr int MAX_T = 200000;
 
 signed main() {
     int n; cin >> n;
-    map<int,int> a[5];
-    LOOP(n) {
-        int t, x, v; cin >> t >> x >> v;
-        a[x][t] = v;
+
+    map<spair<i64>,i64> snuke;
+    i64 T = 0;
+    REP(n) {
+        i64 t, x, a; cin >> t >> x >> a;
+        snuke[{ t, x }] = a;
+        chmax(T, t);
     }
 
-    Lib::MultiVector<ll,2> dp(MAX_T+1, 5, -1);
-    dp(0, 0) = 0;
+    lib::multi_container<i64,2,lib::valarray> dp(T+1, 6, -INF64); // (i, j) := 時刻 i で j の穴
 
-    ll ans = 0;
-
-    REP(t, MAX_T) {
-        REP(i, 5) {
-            REP(j, 5) if(abs(i-j) <= 1) chmax(dp(t+1, i), dp(t, j));
-            const auto tp = a[i].upper_bound(t);
-            if(tp == a[i].end()) continue;
-            REP(j, 5) {
-                if(dp(t,j) < 0) continue;
-                const int dx = abs(i-j), dt = tp->$F - t;
-                if(dx <= dt) {
-                    chmax(dp(tp->$F, i), dp(t, j) + tp->$S);
-                    chmax(ans, dp(tp->$F, i));
-                }
-            }
-        }
+    dp(0,0) = 0;
+    REP(t, T) REP(p, 5) {
+        dp(t+1,p) = max({ dp(t,p-1), dp(t,p), dp(t,p+1) }) + snuke[{ t+1, p }];
     }
+    debug(dp);
 
-    print(ans);
+    print(dp[T].max());
 
     return 0;
 }
