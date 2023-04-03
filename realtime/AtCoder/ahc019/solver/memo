@@ -1,0 +1,20 @@
+Solver 00:
+- デカいブロックで
+
+Solver 01:
+- サンプルから無駄をなくしただけ
+
+Solver 03:
+- Test 用
+
+Solver 04 extends 02:
+- 二つの隣接しないブロックに対して，同じ影のできる他の一つのブロックがあるなら，そちらに統合する．
+
+Solver 05 extends 04:
+- 二つの隣接するブロックを適当に結合する
+
+Solver 06 extends 05:
+- Refactor
+
+Solver 07 extends 06:
+- split 
