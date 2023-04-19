@@ -23,18 +23,18 @@ signed main() {
     return 0;
 }
 
-#include "data_structure/disjoint_sparse_table.hpp"
-#include "data_structure/range_action/range_sum.hpp"
-#include "algebraic/monoid/gcd.hpp"
+#include "graph/shortest_path.hpp"
 
 void solve() {
-    int n; cin >> n;
-    valarray<i64> a(n); input >> a;
-    lib::disjoint_sparse_table<lib::actions::range_sum<lib::monoids::gcd<int>>> data(ALL(a));
+    int k; cin >> k;
 
-    maximum<int> ans = 0;
+    lib::graph G(k+1);
+    G.add_edge(k, 1, 1);
 
-    REP(i, n) ans <<= data(0, i).fold() + data(i+1, n).fold();
+    REP(i, k) {
+        G.add_edge(i, lib::mod(i + 1, k), 1);
+        G.add_edge(i, lib::mod(10 * i, k), 0);
+    }
 
-    print(ans);
+    print(G.distances_with_01cost(k)[0]);
 }

@@ -21,9 +21,9 @@ signed main() {
 
     auto valid = [&](i64 m) -> bool {
         unordered_map<u64,int> mp;
-        FORD(i, n-m) mp[hash.subseq(i, m).val()] = i;
+        FORD(i, n-m) mp[hash.subseq(i, m)] = i;
         FORD(i, n-m) {
-            u64 h = hash.subseq(i, m).val();
+            u64 h = hash.subseq(i, m);
             if(not mp.count(h)) continue;
             if(mp[h] <= i - m) return true;
         }
@@ -31,7 +31,7 @@ signed main() {
     };
 
     lib::boundary_seeker<int> seeker(valid);
-
     print(seeker.bound(0, n));
+
     return 0;
 }

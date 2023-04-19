@@ -23,18 +23,14 @@ signed main() {
     return 0;
 }
 
-#include "data_structure/disjoint_sparse_table.hpp"
-#include "data_structure/range_action/range_sum.hpp"
-#include "algebraic/monoid/gcd.hpp"
+#include "graph/spanning_tree.hpp"
 
 void solve() {
-    int n; cin >> n;
-    valarray<i64> a(n); input >> a;
-    lib::disjoint_sparse_table<lib::actions::range_sum<lib::monoids::gcd<int>>> data(ALL(a));
+    int n, m, q; cin >> n >> m >> q;
+    lib::graph G(n); G.read_bidirectionally<true>(m);
 
-    maximum<int> ans = 0;
+    lib::graph mst;
+    G.minimum_spanning_tree(&mst);
 
-    REP(i, n) ans <<= data(0, i).fold() + data(i+1, n).fold();
-
-    print(ans);
+    debug(mst);
 }

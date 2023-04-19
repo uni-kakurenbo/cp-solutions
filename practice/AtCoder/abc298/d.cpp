@@ -23,18 +23,21 @@ signed main() {
     return 0;
 }
 
-#include "data_structure/disjoint_sparse_table.hpp"
-#include "data_structure/range_action/range_sum.hpp"
-#include "algebraic/monoid/gcd.hpp"
+#include "hash/sequence_hasher.hpp"
 
 void solve() {
-    int n; cin >> n;
-    valarray<i64> a(n); input >> a;
-    lib::disjoint_sparse_table<lib::actions::range_sum<lib::monoids::gcd<int>>> data(ALL(a));
+    int q; cin >> q;
 
-    maximum<int> ans = 0;
+    lib::sequence_hasher<998244353,10> hash;
+    hash.push_back(1);
 
-    REP(i, n) ans <<= data(0, i).fold() + data(i+1, n).fold();
-
-    print(ans);
+    REP(q) {
+        int t; cin >> t;
+        if(t == 1) {
+            int x; cin >> x;
+            hash.push_back(x);
+        }
+        if(t == 2) hash.pop_front();
+        if(t == 3) print(hash.get());
+    }
 }
