@@ -39,12 +39,11 @@ void solve() {
 
     lib::centroid_path_decomposition cpd(mst);
 
-    valarray<int> _cost(n - 1);
+    lib::disjoint_sparse_table<lib::actions::range_max<int>> cost(n - 1);
     ITR(e, mst.edges()) {
-        cpd.edges_on_path(e.from, e.to, [&](int l, int) { _cost[l] = e.cost; });
+        cpd.edges_on_path(e.from, e.to, [&](int l, int) { cost.raw()[l] = e.cost; });
     }
-    debug(_cost);
-    lib::disjoint_sparse_table<lib::actions::range_max<int>> cost(ALL(_cost));
+    debug(cost);
 
     REP(q) {
         int u, v, w; cin >> u >> v >> w; --u, --v;
@@ -53,6 +52,6 @@ void solve() {
 
         debug(mx_c);
 
-        print(m < mx_c ? "Yes" : "No");
+        print(w < mx_c ? "Yes" : "No");
     }
 }
