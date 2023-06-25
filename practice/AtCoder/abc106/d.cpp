@@ -22,13 +22,13 @@ signed main() {
     }
     debug(ps);
 
-    lib::accumulation_2d<int> cnt(ALL(ps));
+    lib::accumulation_2d cnt(ALL(ps));
 
     debug(cnt);
 
     REP(q) {
         int p, q; cin >> p >> q; --p;
-        print(cnt({ p, 0 }, { n, q }));
+        print(cnt({ p, n }, { 0, q }));
     }
 
     return 0;
