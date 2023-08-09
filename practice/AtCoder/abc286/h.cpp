@@ -7,24 +7,34 @@
 /* #language C++ GCC */
 /* #region template */
 #include <bits/stdc++.h>
-using namespace std;
 
 #include "template.hpp"
 /* #endregion */
 
-#include "geometry.hpp"
-#include "geometry/convex_full.hpp"
+void solve();
 
 signed main() {
+    int $ = 1;
+    // std::cin >> $;
+    for(int _ = 0; _ < $; ++_) {
+        DEBUG("Case: #" + std::to_string(_));
+        solve();
+    }
+    return 0;
+}
+
+#include "geometry/convex_full.hpp"
+
+void solve() {
     using point = lib::point<i64>;
 
     int n; cin >> n;
-    vector<point> poly(n+2); input >> poly;
+    valarray<point> poly(n+2); input >> poly;
     auto s = poly.end()[-2], t = poly.end()[-1];
     debug(poly);
 
-    auto hull = lib::convex_hull(poly);
-    int m = hull.size();
+    auto hull = lib::convex_hull(ALL(poly));
+    int m = (int)hull.size();
     debug(m, hull);
 
     int p = -1, q = -1;
@@ -36,7 +46,7 @@ signed main() {
 
     if(p == -1 or q == -1) {
         print(lib::distance<ld>(s, t));
-        return 0;
+        return;
     }
 
     ld d0 = 0, d1 = 0;
@@ -49,5 +59,5 @@ signed main() {
 
     print(std::min(d0, d1));
 
-    return 0;
+    return;
 }
