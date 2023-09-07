@@ -1,16 +1,17 @@
 #!/bin/bash
 
 EXECUTION_COMMAND="$1"
-PARALLEL=5
 CASE_ID="cases100"
+PARALLEL=10
 
 if [ "$2" != "" ]; then
-    PARALLEL="$2"
+    CASE_ID="$2"
 fi
 
 if [ "$3" != "" ]; then
-    CASE_ID="$3"
+    PARALLEL="$3"
 fi
+
 
 echo "Parallel execution: $PARALLEL"
 
@@ -29,7 +30,7 @@ function run_case() {
     started_at=$(date +%s.%N)
 
     # shellcheck disable=SC2086
-    timeout 6 $executin_command <"$file" >"$case/$case_name.res" 2>"$case/$case_name.log"
+    timeout 4 cargo run --release --bin tester $executin_command < "$file" >"$case/$case_name.res" 2> "$case/$case_name.log"
     echo $? >"$case/$case_name.info"
 
     ended_at=$(date +%s.%N)
@@ -44,4 +45,4 @@ export -f run_case
 
 find "$CASE_ID" -name "*.txt" -print0 | xargs -0 -P "$PARALLEL" -I {} bash -c "run_case '$CASE_ID' '$EXECUTION_COMMAND' {}"
 echo
-./calc_score.sh "$CASE_ID"
+./calc-score.sh "$CASE_ID"
