@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build_cpp__pck",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/pck.sh",
+            "args": [
+                "'${file}'",
+                "'${fileDirname}/${fileBasenameNoExtension}.exe'"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "build_pck__strict",
+            "type": "shell",
+            "command": "${workspaceFolder}/../../commands/ccore.sh",
+            "args": [
+                "'${file}'",
+                "'${fileDirname}/${fileBasenameNoExtension}.exe'",
+                "-ftrapv -fstack-protector-all -Wconversion -Wfloat-equal -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC",
+                "-fsanitize=undefined,leak,address"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        }
+    ]
+}
