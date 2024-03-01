@@ -20,30 +20,36 @@ signed main() {
     return 0;
 }
 
+
 #include "data_structure/segment_tree.hpp"
-#include "action/helpers.hpp"
-
-using mint = lib::static_modint_64bit<(1UL << 61) - 1>;
-
-// struct hash {
-//     mint val, rev, pow;
-// };
-
-// hash op(hash p, hash q) {
-//     return {
-//         p.val + q.val * pow * 10
-//         q.rev * pow
-//         p.len + q.len
-//     };
-// }
+#include "algebraic/rolling_hash.hpp"
+#include "algebraic/combined.hpp"
 
 void solve() {
     int n, q; input >> n >> q;
     string s; input >> s;
-    debug(mint::is_prime);
-    debug(mint{10}.pow(1000));
 
-    lib::modint64 a = 0;
-    debug(a);
-    debug(lib::modint64::bit_length);
+
+    lib::segment_tree<
+        lib::algebraic::combined<
+            lib::algebraic::rolling_hash<false>,
+            lib::algebraic::rolling_hash<true>
+        >
+    > hash(s);
+
+
+    REP(q) {
+        int t; input >> t;
+        if(t == 1) {
+            int x; char c; input >> x >> c; --x;
+            hash[x] = c;
+        }
+        if(t == 2) {
+            int l, r; input >> l >> r; --l;
+            debug(hash(l, r).fold());
+            print.yesno(hash(l, r).fold()->first == hash(l, r).fold()->second);
+        }
+
+        debug(hash);
+    }
 }

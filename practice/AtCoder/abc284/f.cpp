@@ -7,16 +7,14 @@
 /* #language C++ GCC */
 /* #region template */
 #include <bits/stdc++.h>
-using namespace std;
-
-#include "template.hpp"
+#include "template/standard.hpp"
 /* #endregion */
 
 #include "hash/sequence_hasher.hpp"
 
 signed main() {
-    int n; cin >> n;
-    string s; cin >> s;
+    int n; input >> n;
+    string s; input >> s;
     string t = s; reverse(ALL(t));
 
     lib::sequence_hasher hash0(ALL(s)), hash1(ALL(t));

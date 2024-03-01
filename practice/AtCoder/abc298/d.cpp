@@ -8,7 +8,7 @@
 /* #region template */
 #include <bits/stdc++.h>
 
-#include "template.hpp"
+#include "template/standard.hpp"
 /* #endregion */
 
 void solve();
@@ -17,7 +17,7 @@ signed main() {
     int $ = 1;
     // std::cin >> $;
     for(int _ = 0; _ < $; ++_) {
-        DEBUG("Case: #" + std::to_string(_));
+        debug_("Case: #" + std::to_string(_));
         solve();
     }
     return 0;
@@ -26,15 +26,15 @@ signed main() {
 #include "hash/sequence_hasher.hpp"
 
 void solve() {
-    int q; cin >> q;
+    int q; input >> q;
 
     lib::sequence_hasher<998244353,10> hash;
     hash.push_back(1);
 
     REP(q) {
-        int t; cin >> t;
+        int t; input >> t;
         if(t == 1) {
-            int x; cin >> x;
+            int x; input >> x;
             hash.push_back(x);
         }
         if(t == 2) hash.pop_front();

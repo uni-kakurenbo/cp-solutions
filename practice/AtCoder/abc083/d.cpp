@@ -21,8 +21,17 @@ signed main() {
 }
 
 void solve() {
-  int n, m; input >> n >> m;
-  valarray<i64> l(m), r(m); input >> lib::views::zip(l, r);
-  l -= 1;
-  print(lib::max(0, r.min() - l.max()));
+    string s; input >> s;
+    int n = s.size();
+
+    int ans = n;
+
+    REP(i, 1, n) {
+        if(s[i-1] != s[i]) {
+            debug(i, n - i);
+            chmin(ans, lib::max(i, n - i));
+        }
+    }
+
+    print(ans);
 }

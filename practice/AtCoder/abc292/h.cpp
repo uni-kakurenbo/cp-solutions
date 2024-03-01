@@ -6,22 +6,19 @@
  */
 /* #language C++ GCC */
 /* #region template */
-#include <bits/stdc++.h>
-using namespace std;
-
-#include "template.hpp"
+#include "template/standard.hpp"
 /* #endregion */
 
 #include "data_structure/segment_tree.hpp"
-#include "data_structure/monoid/addition.hpp"
+#include "algebraic/addition.hpp"
 
-template<class T> using base = lib::monoids::base<std::pair<T,T>>;
+template<class T> using base = lib::algebraic::base<std::pair<T,T>>;
 
 template<class T>
-struct monoid : base<T> {
+struct monoid : base<T>, lib::algebraic::associative {
     using base<T>::base;
     monoid() : base<T>::base({ 0, INT_MIN }) {}
-    inline monoid operator*(const monoid& other) const {
+    inline monoid operator+(const monoid& other) const {
         return monoid({
             this->val().first + other->first,
             std::max(this->val().second, this->val().first + other->second)
@@ -37,20 +34,19 @@ signed main() {
         a[i] = { v - b, v - b };
     }
 
-    lib::segment_tree<monoid<i64>> data(ALL(a));
+    lib::segment_tree<monoid<i64>> data(a);
     debug(data);
 
-    print << fixed << std::setprecision(20);
     REP(q) {
         i64 c, x; cin >> c >> x; --c;
-        data.set(c, { x - b, x - b });
+        data[c] = spair<i64>{ x - b, x - b };
         debug(data);
 
         int i = data.max_right(0, [](auto s) { return s->second < 0; });
         if(i != n) i++;
-        debug(i, data.prod(0, i));
+        debug(i, data(0, i).fold());
 
-        print(ld(data.prod(0, i).first + b*i) / i);
+        print(ld(data(0, i).fold()->first + b*i) / i);
     }
     return 0;
 }

@@ -20,9 +20,16 @@ signed main() {
     return 0;
 }
 
+#include "action/range_sequence_hash.hpp"
+#include "data_structure/disjoint_sparse_table.hpp"
+
 void solve() {
-  int n, m; input >> n >> m;
-  valarray<i64> l(m), r(m); input >> lib::views::zip(l, r);
-  l -= 1;
-  print(lib::max(0, r.min() - l.max()));
+    int n, q; input >> n >> q;
+    string s; input >> s;
+    lib::disjoint_sparse_table<lib::actions::range_sequence_hash<>> hash(s);
+
+    REP(q) {
+        int a, b, c, d; input >> a >> b >> c >> d; --a, --c;
+        print.yesno(hash(a, b).fold() == hash(c, d).fold());
+    }
 }

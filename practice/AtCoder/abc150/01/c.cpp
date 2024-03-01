@@ -21,8 +21,12 @@ signed main() {
 }
 
 void solve() {
-  int n, m; input >> n >> m;
-  valarray<i64> l(m), r(m); input >> lib::views::zip(l, r);
-  l -= 1;
-  print(lib::max(0, r.min() - l.max()));
+    int n; input >> n;
+    vector<i64> p(n), q(n); input >> p >> q;
+    if(q < p) std::swap(p, q);
+
+    int ans = 0;
+    while(p != q) std::next_permutation(ALL(p)), ++ans;
+
+    print(ans);
 }

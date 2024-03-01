@@ -3,22 +3,64 @@
 #
 # CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
 
-# #language PyPy3 #
+# #language PyPy #
+#region template
 
-from sys import setrecursionlimit, stderr, argv
-# setrecursionlimit(10**5)
+import sys
+
+
+# sys.setrecursionlimit(10**5)
 def debug(*args, **opts):
-    if argv[-1] == "LOCAL_JUDGE": print(*args, **opts, file=stderr)
+    if "LOCAL_JUDGE" in sys.argv: print(*args, **opts, file=sys.stderr)
+
+
+class istream():
+
+    def __init__(self, source=sys.stdin):
+        self.pos = -1
+        self.buffer = []
+        self.source = source
+
+    def one(self):
+        self.pos += 1
+        if self.pos >= len(self.buffer): self.buffer.extend(self.source.readline().split())
+        return self.buffer[self.pos]
+
+    def __call__(self, *types):
+        if len(types) == 0: return str(self.one())
+
+        if len(types) == 1:
+            tp, count = types[0], 1
+            if isinstance(tp, int):
+                tp, count = str, tp
+            if count == 1:
+                return tp(self.one())
+            else:
+                return tuple(tp(self.one()) for _ in [0] * count)
+
+        if len(types) == 2 and isinstance(types[1], int):
+            return tuple(types[0](self.one()) for _ in [0] * types[1])
+
+        return tuple(map(lambda type: type(self.one()), types))
+
+    def line(self, type):
+        return tuple(map(type, self.source.readline().split()))
+
+
+cin = istream()
+
+# setrecursionlimit(10**5)
+
+#endregion
 
 n, l, w = map(int, input().split())
-A = [*map(int, input().split())]
-A.append(l)
+A = [*map(int, input().split()), l]
 
-x = 0
+cur = 0
 ans = 0
+
 for a in A:
-    take = ((a - x) + w - 1) // w;
-    ans += max(take, 0)
-    x = a+w
+    ans += max(((a - cur) + w - 1) // w, 0)
+    cur = a + w
 
 print(ans)
