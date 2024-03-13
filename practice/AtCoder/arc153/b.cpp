@@ -4,24 +4,30 @@
  *
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
-/* #language C++ GCC */
-/* #region template */
-#include <bits/stdc++.h>
-using namespace std;
+/* #language C++ 20 GCC */
+#include "template/standard.hpp"
 
-#include "template.hpp"
-/* #endregion */
-
-#include "grid.hpp"
-
-#include "data_structure/implicit_treap.hpp"
-#include "data_structure/range_action/null.hpp"
+void solve();
 
 signed main() {
-    int h, w; cin >> h >> w;
-    lib::grid<char,string> G(h, w); G.read();
+    debug(__cplusplus);
+    int $ = 1;
+    // std::cin >> $;
+    for(int _ = 0; _ < $; ++_) {
+        debug_("Case: #" + std::to_string(_));
+        solve();
+    }
+    return 0;
+}
 
-    lib::implicit_treap<lib::actions::null<int>> s, t;
+#include "data_structure/dynamic_sequence.hpp"
+#include "action/null.hpp"
+
+void solve() {
+    int h, w; cin >> h >> w;
+    lib::grid<char,string> G(h, w); input >> G;
+
+    lib::dynamic_sequence<lib::actions::null<int>> s, t;
 
     REP(i, h) s.push_back(i);
     REP(i, w) t.push_back(i);
@@ -36,9 +42,9 @@ signed main() {
     }
 
     REP(i, h) {
-        REP(j, w) print << G(s[i], t[j]);
+        REP(j, w) print << G(s[i].val(), t[j].val());
         print();
     }
 
-    return 0;
+    return;
 }

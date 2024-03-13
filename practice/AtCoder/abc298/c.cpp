@@ -14,11 +14,12 @@ signed main() {
     int $ = 1;
     // std::cin >> $;
     for(int _ = 0; _ < $; ++_) {
-        debug_("Case: #" + std::to_string(_));
+        // debug_("Case: #" + std::to_string(_));
         solve();
     }
     return 0;
 }
+
 
 void solve() {
     int n, q; input >> n >> q;
@@ -26,6 +27,7 @@ void solve() {
     vector<lib::multiset<int>> cards(n);
     std::array<lib::set<int>, 200000> boxes;
 
+    // debugger::dump_wrapper{}(cards[0]);
     REP(q) {
         int t; input >> t;
         if(t == 1) {
