@@ -20,26 +20,16 @@ signed main() {
     return 0;
 }
 
-#include "convolution/sum.hpp"
+using mint = lib::modint998244353;
 
 void solve() {
-    string s, t; cin >> s >> t;
-    int n = s.size(), m = t.size();
-    vector<i64> a(n), b(m);
+    i64 n, k, l; input >> n >> k >> l;
 
-    REP(i, n) a[i] = s[i]-'0';
-    REP(i, m) b[i] = t[m-i-1]-'0';
-    debug(a, b);
+    mint ans = 1;
 
-    lib::accumulation<i64> p(ALL(a)), q(ALL(b));
-    auto conv = lib::convolution(a, b);
-    debug(conv);
-
-    i64 ans = INF32;
-    REP(i, n-m+1) {
-        i64 pro = 0;
-        pro += p(i, i+m) + q.back() - 2 * conv[m+i-1];
-        chmin(ans, pro);
+    REP(i, n) {
+        if(i < n - k) ans *= lib::max(0, l - i);
+        else ans *= lib::max(0, l - n + k);
     }
 
     print(ans);

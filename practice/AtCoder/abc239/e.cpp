@@ -32,13 +32,12 @@ void solve() {
         multiset<int> res = { x[v] };
         ITR(nv, tree[v]) {
             if(nv == p) continue;
-            res.merge(dfs(dfs, nv, v));
+            res |= dfs(dfs, nv, v);
             while(res.size() > 20) res.pop_min();
         }
         return sets[v] = res;
     };
     dfs(dfs, 0, -1);
-    debug(sets);
 
     REP(q) {
         int v, k; input >> v >> k; --v, --k;
