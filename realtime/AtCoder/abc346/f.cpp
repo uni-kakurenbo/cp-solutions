@@ -35,7 +35,7 @@ void solve() {
     lib::inverse<char> inv(s + s + s);
     debug(inv);
 
-    std::unordered_map<char, lib::compressed<i32>> comp;
+    lib::gp_hash_table<char, lib::compressed<i32>> comp;
     ITR(c, is, inv) {
         comp[c] = lib::compressed<i32>(is);
     }
@@ -48,7 +48,7 @@ void solve() {
         i128 prev = f / sz;
         f -= prev * sz;
 
-        int rnk = comp[x].rank2(f - 1) + 1;
+        int rnk = comp[x].rank(f);
         k += rnk;
 
         i128 base = k / cnt[x];
