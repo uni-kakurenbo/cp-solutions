@@ -20,23 +20,23 @@ signed main() {
     return 0;
 }
 
-#include "data_structure/wavelet_matrix.hpp"
+#include "data_structure/dynamic_sequence.hpp"
+#include "data_structure/dynamic_sequence.hpp"
+#include "data_structure/red_black_tree.hpp"
 
 void solve() {
     int n; input >> n;
-    lib::wavelet_matrix wm(({
-        vector<i32> v(n); input >> v;
-        v;
-    }));
+    string s; input >> s;
+
+    lib::dynamic_sequence<char, lib::persistent_red_black_tree_context<lib::i32>> data(s);
 
     int q; input >> q;
     REP(q) {
-        int v; input >> v;
-        print(
-            lib::min(
-                std::abs(wm.prev(v).value_or(-INF32) - v),
-                std::abs(wm.next(v).value_or(-INF32) - v)
-            )
-        );
+        int l, r, p; input >> l >> r >> p;
+        data.insert(p, data(l, r).clone());
+        if(data.size() >= n) data = data(0, n).clone();
+        debug(data);
     }
+
+    print(data.to<std::string>());
 }

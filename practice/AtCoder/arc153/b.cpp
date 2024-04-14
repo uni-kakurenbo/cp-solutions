@@ -20,17 +20,15 @@ signed main() {
     return 0;
 }
 
-#include "data_structure/dynamic_sequence.hpp"
+#include "data_structure/actable_dynamic_sequence.hpp"
+#include "data_structure/red_black_tree.hpp"
 #include "action/null.hpp"
 
 void solve() {
     int h, w; cin >> h >> w;
-    lib::grid<char,string> G(h, w); input >> G;
+    lib::grid<char, string> G(h, w); input >> G;
 
-    lib::dynamic_sequence<lib::actions::null<int>> s, t;
-
-    REP(i, h) s.push_back(i);
-    REP(i, w) t.push_back(i);
+    lib::actable_dynamic_sequence<lib::actions::null<int>> s(std::views::iota(0, h)), t(std::views::iota(0, w));
     debug(s, t);
 
     int q; cin >> q;
@@ -42,7 +40,7 @@ void solve() {
     }
 
     REP(i, h) {
-        REP(j, w) print << G(s[i].val(), t[j].val());
+        REP(j, w) print << G(s[i].val().val(), t[j].val().val());
         print();
     }
 

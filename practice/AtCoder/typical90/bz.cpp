@@ -20,27 +20,17 @@ signed main() {
     return 0;
 }
 
-#include "numeric/boundary_seeker.hpp"
-
 void solve() {
-    i32 n, l; input >> n >> l;
-    i32 k; input >> k;
-    vector<i32> a(n); input >> a;
-    a.push_back(l);
+    int n, m; input >> n >> m;
+    lib::graph<int> graph(n); graph.read_bidirectionally(m);
 
-    auto ok = [&](i32 v) {
-        i32 cur = 0;
-        i32 cnt = 0;
+    int ans = 0;
 
-        FOR(i, n) {
-            if(a[i] - cur >= v) cur = a[i], ++cnt;
-        }
+    REP(i, n) {
+        int cnt = 0;
+        ITR(v, graph[i]) if(v < i) cnt++;
+        ans += cnt == 1;
+    }
 
-        debug(v, cnt);
-
-        return cnt > k;
-    };
-
-    lib::boundary_seeker<i32> seeker(ok);
-    print(seeker.bound(0));
+    print(ans);
 }

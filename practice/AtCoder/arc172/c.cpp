@@ -20,27 +20,16 @@ signed main() {
     return 0;
 }
 
-#include "numeric/boundary_seeker.hpp"
-
 void solve() {
-    i32 n, l; input >> n >> l;
-    i32 k; input >> k;
-    vector<i32> a(n); input >> a;
-    a.push_back(l);
+    int n; input >> n;
+    string c; input >> c;
 
-    auto ok = [&](i32 v) {
-        i32 cur = 0;
-        i32 cnt = 0;
+    valarray<int> s(n + 1);
+    REP(i, n) s[i + 1] = s[i] + (c[i] == 'A' ? 1 : -1);
 
-        FOR(i, n) {
-            if(a[i] - cur >= v) cur = a[i], ++cnt;
-        }
+    int ans = 0;
 
-        debug(v, cnt);
-
-        return cnt > k;
-    };
-
-    lib::boundary_seeker<i32> seeker(ok);
-    print(seeker.bound(0));
+    REP(i, n) {
+        
+    }
 }

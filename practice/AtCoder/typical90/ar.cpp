@@ -20,23 +20,28 @@ signed main() {
     return 0;
 }
 
-#include "data_structure/wavelet_matrix.hpp"
+#include "data_structure/dynamic_sequence.hpp"
 
 void solve() {
-    int n; input >> n;
-    lib::wavelet_matrix wm(({
-        vector<i32> v(n); input >> v;
+    int n, q; input >> n >> q;
+    lib::dynamic_sequence<int> a(({
+        vector<int> v(n); input >> v;
         v;
     }));
+    debug(a);
 
-    int q; input >> q;
     REP(q) {
-        int v; input >> v;
-        print(
-            lib::min(
-                std::abs(wm.prev(v).value_or(-INF32) - v),
-                std::abs(wm.next(v).value_or(-INF32) - v)
-            )
-        );
+        int t, x, y; input >> t >> x >> y; --x, --y;
+        if(t == 1) {
+            int temp = a[x];
+            a[x] = a[y].val();
+            a[y] = temp;
+        }
+        if(t == 2) {
+            a.rotate_right();
+        }
+        if(t == 3) {
+            print(a[x]);
+        }
     }
 }

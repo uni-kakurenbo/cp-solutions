@@ -8,7 +8,7 @@
 /* #region template */
 #include <bits/stdc++.h>
 
-#include "template.hpp"
+#include "template/standard.hpp"
 /* #endregion */
 
 void solve();
@@ -17,7 +17,7 @@ signed main() {
     int $ = 1;
     // std::cin >> $;
     for(int _ = 0; _ < $; ++_) {
-        DEBUG("Case: #" + std::to_string(_));
+        debug_("Case: #" + std::to_string(_));
         solve();
     }
     return 0;
@@ -27,7 +27,7 @@ signed main() {
 #include "graph/centroid_path_decomposition.hpp"
 
 #include "data_structure/disjoint_sparse_table.hpp"
-#include "data_structure/range_action/range_max.hpp"
+#include "action/range_max.hpp"
 
 void solve() {
     int n, m, q; cin >> n >> m >> q;
@@ -48,7 +48,7 @@ void solve() {
     REP(q) {
         int u, v, w; cin >> u >> v >> w; --u, --v;
         int mx_c = 0;
-        cpd.edges_on_path(u, v, [&](int l, int r) { chmax(mx_c, cost(l, r).fold()); });
+        cpd.edges_on_path(u, v, [&](int l, int r) { chmax(mx_c, cost(l, r).fold().val()); });
 
         debug(mx_c);
 

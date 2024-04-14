@@ -20,27 +20,18 @@ signed main() {
     return 0;
 }
 
-#include "numeric/boundary_seeker.hpp"
-
 void solve() {
-    i32 n, l; input >> n >> l;
-    i32 k; input >> k;
-    vector<i32> a(n); input >> a;
-    a.push_back(l);
+    i32 t; input >> t;
+    i32 l, x, y; input >> l >> x >> y;
+    int q; input >> q;
 
-    auto ok = [&](i32 v) {
-        i32 cur = 0;
-        i32 cnt = 0;
+    REP(q) {
+        ld e; input >> e;
+        ld py = l * std::cos(2 * M_PI * e / t - M_PI_2) / -2;
+        ld pz = (l * std::sin(2 * M_PI * e / t - M_PI_2) + l) / 2;
+        debug(e, py, pz);
 
-        FOR(i, n) {
-            if(a[i] - cur >= v) cur = a[i], ++cnt;
-        }
-
-        debug(v, cnt);
-
-        return cnt > k;
-    };
-
-    lib::boundary_seeker<i32> seeker(ok);
-    print(seeker.bound(0));
+        ld dy = std::abs(py - y);
+        print(std::atan2(pz, std::hypot(dy, x)) * 180 / M_PI);
+    }
 }

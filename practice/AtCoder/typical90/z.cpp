@@ -20,13 +20,24 @@ signed main() {
     return 0;
 }
 
-#include "graph/shortest_path.hpp"
-#include "graph/tree_diamiter.hpp"
-
 void solve() {
     i32 n; input >> n;
-    lib::graph<i32> graph(n); graph.read_bidirectionally(n - 1);
+    lib::graph<i32> tree(n); tree.read_bidirectionally(n - 1);
 
-    auto diamiter = lib::tree_diamiter(graph);
-    print(diamiter.first + 1);
+    vector<i32> colors;
+    tree.is_bipartite(&colors);
+    debug(colors);
+
+    i32 cnt0 = colors.count(-1), cnt1 = colors.count(1);
+
+    vector<i32> res;
+
+    if(cnt0 >= cnt1) {
+        REP(i, n) if(colors[i] == -1 && res.ssize() < n / 2) res.push_back(i + 1);
+    }
+    else {
+        REP(i, n) if(colors[i] == 1 && res.ssize() < n / 2) res.push_back(i + 1);
+    }
+
+    print(res);
 }

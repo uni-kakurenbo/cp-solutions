@@ -20,27 +20,29 @@ signed main() {
     return 0;
 }
 
-#include "numeric/boundary_seeker.hpp"
-
 void solve() {
-    i32 n, l; input >> n >> l;
-    i32 k; input >> k;
-    vector<i32> a(n); input >> a;
-    a.push_back(l);
+    int n; input >> n;
 
-    auto ok = [&](i32 v) {
-        i32 cur = 0;
-        i32 cnt = 0;
+    if(n % 2) return;
 
-        FOR(i, n) {
-            if(a[i] - cur >= v) cur = a[i], ++cnt;
+    vector<string> res;
+
+    REP(x, 1UL << n) {
+        int l = 0, r = 0;
+
+        string s;
+
+        bool ok = true;
+        REP(i, n) {
+            if(lib::bit(x, i)) ++l, s += '(';
+            else ++r, s += ')';
+            if(l < r) ok = false;
         }
+        ok &= r == l;
 
-        debug(v, cnt);
+        if(ok) res.push_back(s);
+    }
 
-        return cnt > k;
-    };
-
-    lib::boundary_seeker<i32> seeker(ok);
-    print(seeker.bound(0));
+    res.sort();
+    print(res);
 }

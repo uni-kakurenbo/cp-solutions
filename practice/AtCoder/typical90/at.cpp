@@ -20,27 +20,19 @@ signed main() {
     return 0;
 }
 
-#include "numeric/boundary_seeker.hpp"
-
 void solve() {
-    i32 n, l; input >> n >> l;
-    i32 k; input >> k;
-    vector<i32> a(n); input >> a;
-    a.push_back(l);
+    i32 n; input >> n;
+    lib::multi_container<i32, 2> v(3, n); input >> v;
+    std::array<std::array<i32, 46>, 3> cnt{};
+    REP(i, 3) ITR(x, v[i]) cnt[i][x % 46]++;
+    debug(cnt);
 
-    auto ok = [&](i32 v) {
-        i32 cur = 0;
-        i32 cnt = 0;
+    i64 ans = 0;
 
-        FOR(i, n) {
-            if(a[i] - cur >= v) cur = a[i], ++cnt;
-        }
+    REP(x, 46) REP(y, 46) REP(z, 46) {
+        if((x + y + z) % 46 != 0) continue;
+        ans += 1L * cnt[0][x] * cnt[1][y] * cnt[2][z];
+    }
 
-        debug(v, cnt);
-
-        return cnt > k;
-    };
-
-    lib::boundary_seeker<i32> seeker(ok);
-    print(seeker.bound(0));
+    print(ans);
 }

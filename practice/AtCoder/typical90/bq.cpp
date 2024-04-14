@@ -20,27 +20,17 @@ signed main() {
     return 0;
 }
 
-#include "numeric/boundary_seeker.hpp"
+using mint = lib::modint1000000007;
 
 void solve() {
-    i32 n, l; input >> n >> l;
-    i32 k; input >> k;
-    vector<i32> a(n); input >> a;
-    a.push_back(l);
+    i64 n, k; input >> n >> k;
 
-    auto ok = [&](i32 v) {
-        i32 cur = 0;
-        i32 cnt = 0;
+    mint ans = 1;
+    REP(i, lib::min(3, n)) {
+        if(i == 0) ans *= k;
+        else if(i == 1) ans *= k - 1;
+        else ans *= mint{ k - 2 }.pow(n - 2);
+    }
 
-        FOR(i, n) {
-            if(a[i] - cur >= v) cur = a[i], ++cnt;
-        }
-
-        debug(v, cnt);
-
-        return cnt > k;
-    };
-
-    lib::boundary_seeker<i32> seeker(ok);
-    print(seeker.bound(0));
+    print(ans);
 }

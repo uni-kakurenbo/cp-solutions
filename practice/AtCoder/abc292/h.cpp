@@ -9,7 +9,7 @@
 #include "template/standard.hpp"
 /* #endregion */
 
-#include "data_structure/segment_tree.hpp"
+#include "data_structure/lazy_segment_tree.hpp"
 #include "algebraic/addition.hpp"
 
 template<class T> using base = lib::algebraic::base<std::pair<T,T>>;
@@ -34,7 +34,7 @@ signed main() {
         a[i] = { v - b, v - b };
     }
 
-    lib::segment_tree<monoid<i64>> data(a);
+    lib::lazy_segment_tree<monoid<i64>> data(a);
     debug(data);
 
     REP(q) {

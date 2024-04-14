@@ -20,27 +20,20 @@ signed main() {
     return 0;
 }
 
-#include "numeric/boundary_seeker.hpp"
+using mint = lib::modint1000000007;
 
 void solve() {
-    i32 n, l; input >> n >> l;
-    i32 k; input >> k;
-    vector<i32> a(n); input >> a;
-    a.push_back(l);
+    i32 n; input >> n;
 
-    auto ok = [&](i32 v) {
-        i32 cur = 0;
-        i32 cnt = 0;
-
-        FOR(i, n) {
-            if(a[i] - cur >= v) cur = a[i], ++cnt;
+    mint ans = 1;
+    REP(n) {
+        mint sum;
+        REP(6) {
+            i32 v; input >> v;
+            sum += v;
         }
+        ans *= sum;
+    }
 
-        debug(v, cnt);
-
-        return cnt > k;
-    };
-
-    lib::boundary_seeker<i32> seeker(ok);
-    print(seeker.bound(0));
+    print(ans);
 }
