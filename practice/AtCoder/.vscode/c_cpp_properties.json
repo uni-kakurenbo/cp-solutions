@@ -3,16 +3,12 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/../../../libraries",
-                "/home/uni_kakurenbo/CompetitiveProgramming/sources/libraries/ac-library",
-                "~/boost",
-                "/home/uni_kakurenbo/CompetitiveProgramming/sources/libraries/uni",
+                "/home/uni_kakurenbo/CompetitiveProgramming/sources/libraries/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++-13",
-            "cStandard": "gnu23",
-            "cppStandard": "gnu++23",
-            "intelliSenseMode": "linux-gcc-x64"
+            "cppStandard": "gnu++20",
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4

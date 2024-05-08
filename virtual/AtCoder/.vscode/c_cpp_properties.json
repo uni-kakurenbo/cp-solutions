@@ -2,11 +2,11 @@
     "configurations": [
         {
             "name": "Linux",
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true
+            },
             "includePath": [
-                "${workspaceFolder}/../../../libraries",
-                "/home/uni_kakurenbo/CompetitiveProgramming/sources/libraries/ac-library",
-                "~/boost",
-                "/home/uni_kakurenbo/CompetitiveProgramming/sources/libraries/uni",
+                "/home/uni_kakurenbo/CompetitiveProgramming/sources/libraries/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++-13",
