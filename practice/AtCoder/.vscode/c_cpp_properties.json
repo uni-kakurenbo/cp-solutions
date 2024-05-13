@@ -5,7 +5,9 @@
             "includePath": [
                 "/home/uni_kakurenbo/CompetitiveProgramming/sources/libraries/**"
             ],
-            "defines": [],
+            "defines": [
+                "LOCAL_JUDGE"
+            ],
             "compilerPath": "/usr/bin/g++-13",
             "cppStandard": "gnu++20",
             "intelliSenseMode": "gcc-x64"
