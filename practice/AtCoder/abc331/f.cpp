@@ -14,7 +14,7 @@ signed main() {
     int $ = 1;
     // std::cin >> $;
     for(int _ = 0; _ < $; ++_) {
-        DEBUG("Case: #" + std::to_string(_));
+        debug_("Case: #" + std::to_string(_));
         solve();
     }
     return 0;
@@ -30,10 +30,10 @@ void solve() {
     string s; input >> s;
 
 
-    lib::segment_tree<
-        lib::algebraic::combined<
-            lib::algebraic::rolling_hash<false>,
-            lib::algebraic::rolling_hash<true>
+    uni::segment_tree<
+        uni::algebraic::combined<
+            uni::algebraic::rolling_hash<false>,
+            uni::algebraic::rolling_hash<true>
         >
     > hash(s);
 

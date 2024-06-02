@@ -6,10 +6,7 @@
  */
 /* #language C++ GCC */
 /* #region template */
-#include <bits/stdc++.h>
-using namespace std;
-
-#include "template.hpp"
+#include "template/standard.hpp"
 /* #endregion */
 
 #include "numeric/extremum_seeker.hpp"
@@ -21,7 +18,7 @@ signed main() {
         return a / std::sqrt(t + 1) + 1.0 * b * t;
     };
 
-    lib::extremum_seeker<ld,i64> seeker(f);
+    uni::extremum_seeker<ld(i64)> seeker(f);
     debug(seeker.arg_min(0));
     print(seeker.min(0));
 
