@@ -47,9 +47,9 @@ S e() { return { 0, 0, 0, 0 }; }
 
 S mapping(F f, S x) {
     return {
-        x.c0 + f.x * x.c1 + f.y * x.c2 + f.x * f.y * x.c3,
-        x.c1 + f.y * x.c3,
-        x.c2 + f.x * x.c3,
+        x.c0 + f.x * x.c2 + f.y * x.c1 + f.x * f.y * x.c3,
+        x.c1 + f.x * x.c3,
+        x.c2 + f.y * x.c3,
         x.c3
     };
 }
@@ -71,7 +71,7 @@ void solve() {
     vector<mint> a(n), b(n); input >> a >> b;
 
     uni::lazy_segment_tree<action> data(n);
-    REP(i, n) data[i] = { a[i] * b[i], b[i], a[i], 1 };
+    REP(i, n) data[i] = { a[i] * b[i], a[i], b[i], 1 };
 
     REP(q) {
         i32 t; input >> t;
