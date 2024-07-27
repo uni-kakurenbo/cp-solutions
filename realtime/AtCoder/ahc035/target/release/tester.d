@@ -1,0 +1,1 @@
+/home/uni_kakurenbo/CompetitiveProgramming/sources/solutions/realtime/AtCoder/ahc035/target/release/tester: /home/uni_kakurenbo/CompetitiveProgramming/sources/solutions/realtime/AtCoder/ahc035/src/bin/tester.rs /home/uni_kakurenbo/CompetitiveProgramming/sources/solutions/realtime/AtCoder/ahc035/src/lib.rs

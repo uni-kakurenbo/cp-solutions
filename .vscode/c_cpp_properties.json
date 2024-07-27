@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/uni_kakurenbo/CompetitiveProgramming/sources/libraries/**"
+            ],
+            "defines": [
+                "LOCAL_JUDGE"
+            ],
+            "compilerPath": "/usr/bin/g++",
+            "cppStandard": "gnu++20",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
