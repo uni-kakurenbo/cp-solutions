@@ -21,26 +21,24 @@ signed main() {
 }
 
 void solve() {
-    int n; input >> n;
+    i32 n, k; input >> n >> k;
     string s; input >> s;
 
-    lib::inverse rev(s);
-    debug(rev);
+    uni::inverse inv(s);
+    debug(inv);
 
-    i64 ans = 0;
-
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
-        }
-        else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
+    string t;
+    i32 ind = -1;
+    REP(i, k) {
+        REP(v, 'a', 'z' + 1) {
+            auto itr = inv[v].upper_bound(ind);
+            if(itr == inv[v].end()) continue;
+            if(n - *itr < k - i) continue;
+            t += v;
+            ind = *itr;
+            break;
         }
     }
 
-    print(ans);
+    print(t);
 }

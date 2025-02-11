@@ -21,25 +21,15 @@ signed main() {
 }
 
 void solve() {
-    int n; input >> n;
-    string s; input >> s;
+    i32 n; input >> n;
+    vector<i64> x(n), y(n); input >> lib::views::zip(x, y);
 
-    lib::inverse rev(s);
-    debug(rev);
+    auto xx = lib::sorted(x)[n / 2], yy = lib::sorted(y)[n / 2];
 
     i64 ans = 0;
 
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
-        }
-        else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
-        }
+    ITR(a, b, lib::views::zip(x, y)) {
+        ans += std::abs(xx - a) + std::abs(yy - b);
     }
 
     print(ans);

@@ -21,25 +21,27 @@ signed main() {
 }
 
 void solve() {
-    int n; input >> n;
-    string s; input >> s;
-
-    lib::inverse rev(s);
-    debug(rev);
+    i32 h, w; input >> h >> w;
+    lib::grid<i32> grid(h, w); input >> grid;
 
     i64 ans = 0;
 
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
+    REP(x, 1UL, 1U << h) {
+        vector<i32> cnt(h * w);
+
+        REP(j, w) {
+            i32 v = -1;
+            bool ok = true;
+            REP(i, h) {
+                if(!lib::bit(x, i)) continue;
+                if(v == -1) v = grid(i, j);
+                if(v != grid(i, j)) BREAK(ok = false);
+            }
+            if(ok) cnt[v - 1]++;
         }
-        else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
-        }
+        debug(cnt);
+
+        chmax(ans, std::popcount(x) * std::ranges::max(cnt));
     }
 
     print(ans);

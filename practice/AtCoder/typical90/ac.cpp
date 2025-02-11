@@ -20,27 +20,23 @@ signed main() {
     return 0;
 }
 
+#include "data_structure/lazy_segment_tree.hpp"
+#include "algebraic/maximum.hpp"
+
+using S = uni::algebraic::maximum<i32>;
+S mapping(S f, S x) { return std::max(f, x); }
+
+using action = uni::actions::mixer<S, S, mapping>;
+
 void solve() {
-    int n; input >> n;
-    string s; input >> s;
+    i32 w, n; input >> w >> n;
 
-    lib::inverse rev(s);
-    debug(rev);
+    uni::lazy_segment_tree<action> h(w, 0);
 
-    i64 ans = 0;
-
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
-        }
-        else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
-        }
+    REP(n) {
+        i32 l, r; input >> l >> r; --l;
+        auto nh = h(l, r).fold().val() + 1;
+        h(l, r) += nh;
+        print(nh);
     }
-
-    print(ans);
 }

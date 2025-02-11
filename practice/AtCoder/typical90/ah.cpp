@@ -21,25 +21,23 @@ signed main() {
 }
 
 void solve() {
-    int n; input >> n;
-    string s; input >> s;
+    i32 n, k; input >> n >> k;
+    vector<i32> a(n); input >> a;
 
-    lib::inverse rev(s);
-    debug(rev);
+    map<i32, i32> cnt;
 
     i64 ans = 0;
 
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
+    i32 l = 0, r = 0;
+    while(l < n) {
+        if(r == n || cnt.ssize() > k) {
+            if(--cnt[a[l]] == 0) cnt.erase(a[l]);
+            ++l;
         }
         else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
+            ++cnt[a[r++]];
         }
+        if(cnt.ssize() <= k) chmax(ans, r - l);
     }
 
     print(ans);

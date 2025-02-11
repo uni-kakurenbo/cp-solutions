@@ -21,26 +21,19 @@ signed main() {
 }
 
 void solve() {
-    int n; input >> n;
-    string s; input >> s;
-
-    lib::inverse rev(s);
-    debug(rev);
-
-    i64 ans = 0;
-
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
-        }
-        else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
-        }
+    i32 n; input >> n;
+    lib::grid<i32> grid(1001, 1001);
+    REP(n) {
+        i32 lx, ly, rx, ry; input >> lx >> ly >> rx >> ry;
+        grid[lx][ly]++;
+        grid[lx][ry]--;
+        grid[rx][ly]--;
+        grid[rx][ry]++;
     }
 
-    print(ans);
+    lib::accumulation_2d cum(grid);
+    vector<i32> cnt(n);
+    FOR(i, 1000) FOR(j, 1000) if(cum[i][j] > 0) cnt[cum[i][j] - 1]++;
+
+    print(cnt);
 }

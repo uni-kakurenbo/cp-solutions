@@ -5,6 +5,8 @@
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
 /* #language C++ 20 GCC */
+// #define DEBUGGER_ENABLED
+
 #include "template/standard.hpp"
 
 void solve();
@@ -20,27 +22,24 @@ signed main() {
     return 0;
 }
 
+using mint = uni::modint1000000007;
+
+#include "numeric/binomial_coefficient.hpp"
+
 void solve() {
-    int n; input >> n;
-    string s; input >> s;
+    i32 n; input >> n;
 
-    lib::inverse rev(s);
-    debug(rev);
+    uni::binomial_coefficient_prime_power_mod<i32, mint> binom(n);
 
-    i64 ans = 0;
+    FOR(k, 1, n) {
+        mint ans = 0;
 
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
+        FOR(i, 1, n) {
+            mint now = binom.lucus(n - (k - 1) * (i - 1), i);
+            if(now == 0) break;
+            ans += now;
         }
-        else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
-        }
+
+        print(ans);
     }
-
-    print(ans);
 }

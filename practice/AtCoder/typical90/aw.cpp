@@ -5,6 +5,8 @@
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
 /* #language C++ 20 GCC */
+// #define DEBUGGER_ENABLED
+
 #include "template/standard.hpp"
 
 void solve();
@@ -20,27 +22,17 @@ signed main() {
     return 0;
 }
 
+#include "graph/spanning_tree.hpp"
+
 void solve() {
-    int n; input >> n;
-    string s; input >> s;
+    i32 n, m; input >> n >> m;
 
-    lib::inverse rev(s);
-    debug(rev);
+    uni::graph<i64> graph(n + 1);
 
-    i64 ans = 0;
-
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
-        }
-        else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
-        }
+    REP(i, m) {
+        i32 c, l, r; input >> c >> l >> r; --l;
+        graph.add_edge_bidirectionally(l, r, c);
     }
 
-    print(ans);
+    print(graph.minimum_spanning_tree().value_or(-1));
 }

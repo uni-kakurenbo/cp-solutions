@@ -5,6 +5,8 @@
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
 /* #language C++ 20 GCC */
+// #define DEBUGGER_ENABLED
+
 #include "template/standard.hpp"
 
 void solve();
@@ -20,27 +22,24 @@ signed main() {
     return 0;
 }
 
+#include "graph/shortest_path.hpp"
+
 void solve() {
-    int n; input >> n;
-    string s; input >> s;
+    i32 n, m; input >> n >> m;
 
-    lib::inverse rev(s);
-    debug(rev);
+    uni::graph<i32> graph(n + m);
 
-    i64 ans = 0;
-
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
-        }
-        else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
+    REP(i, m) {
+        i32 k; input >> k;
+        REP(k) {
+            i32 v; input >> v; --v;
+            graph.add_edge_bidirectionally(v, i + n);
         }
     }
 
-    print(ans);
+    auto dist = graph.shortest_path_with_cost(0);
+
+    REP(i, n) {
+        print(uni::to_optional_if_over(dist[i] / 2, n).value_or(-1));
+    }
 }

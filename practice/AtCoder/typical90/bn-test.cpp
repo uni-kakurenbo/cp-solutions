@@ -20,27 +20,26 @@ signed main() {
     return 0;
 }
 
+#include "numeric/leveler.hpp"
+#include "iterable/count_inversion.hpp"
+
 void solve() {
-    int n; input >> n;
-    string s; input >> s;
+    i32 n; input >> n;
+    valarray<i32> l(n), r(n); input >> uni::views::zip(l, r);
+    l -= 1;
 
-    lib::inverse rev(s);
-    debug(rev);
+    valarray p = r - l;
+    uni::leveler<i32> level(p);
 
-    i64 ans = 0;
+    ld sum = 0;
 
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
-        }
-        else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
-        }
+    REP(x, level.sup()) {
+        auto v = level.revert(x);
+        v += l;
+
+        sum += uni::inversion<>::count(v);
     }
 
-    print(ans);
+    debug(sum, level.sup());
+    debug(sum / level.sup());
 }

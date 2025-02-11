@@ -21,26 +21,25 @@ signed main() {
 }
 
 void solve() {
-    int n; input >> n;
-    string s; input >> s;
+    i32 n; input >> n;
+    uni::graph<i32> graph(n); graph.read_bidirectionally(n - 1);
 
-    lib::inverse rev(s);
-    debug(rev);
+    vector<i64> size(n);
+    {
+        auto dfs = [&](auto&& dfs, i32 v, i32 p) -> i32 {
+            i32 acc = 1;
+            ITR(nv, graph[v]) {
+                if(nv == p) continue;
+                acc += dfs(dfs, nv, v);
+            }
+            return size[v] = acc;
+        };
+        dfs(dfs, 0, -1);
+    }
+    debug(size);
 
     i64 ans = 0;
-
-    REP(l, n) {
-        if(s[l] == 'o') {
-            auto itr = rev['x'].lower_bound(l);
-            if(itr == rev['x'].end()) continue;
-            ans += n - *itr;
-        }
-        else {
-            auto itr = rev['o'].lower_bound(l);
-            if(itr == rev['o'].end()) continue;
-            ans += n - *itr;
-        }
-    }
+    REP(i, 1, n) ans += size[i] * (n - size[i]);
 
     print(ans);
 }
