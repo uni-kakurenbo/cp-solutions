@@ -54,7 +54,7 @@ void solve() {
             i32 r = pos;
             debug(l, r);
 
-            data(l, r) += std::make_pair(-1, 0);
+            data(l, r) *= std::make_pair(-1, 0);
             data.reverse(l, r);
 
             stk.pop();
