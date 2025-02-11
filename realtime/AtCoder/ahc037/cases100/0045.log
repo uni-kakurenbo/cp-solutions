@@ -1,0 +1,33 @@
+[m[3;35m05.cpp #15 (0)[m[m
+ - [m[32m__cplusplus[m : [m[36m202002[31mL[m[m [34mlong[m[m[m
+[3;35m05.cpp #19[m  [33m`Case: #0`[m[m
+[m[3;35m05.cpp #217 (0)[m[m
+ - [m[32medges.graph.size()[m : [m[36m8358[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (0)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m4522[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #304 (0)[m[m
+ - [m[32mcost[m : [m[36m43467014389[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #217 (1)[m[m
+ - [m[32medges.graph.size()[m : [m[36m10121[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (1)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m6251[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #309 (0)[m[m
+ - [m[32mn_cost[m : [m[36m35334202155[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #217 (2)[m[m
+ - [m[32medges.graph.size()[m : [m[36m11016[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (2)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m7146[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #309 (1)[m[m
+ - [m[32mn_cost[m : [m[36m32727485254[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #217 (3)[m[m
+ - [m[32medges.graph.size()[m : [m[36m11112[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (3)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m7244[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #309 (2)[m[m
+ - [m[32mn_cost[m : [m[36m32615941834[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #217 (4)[m[m
+ - [m[32medges.graph.size()[m : [m[36m11112[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (4)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m7244[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #309 (3)[m[m
+ - [m[32mn_cost[m : [m[36m32615941834[31mL[m[m [34mlong[m[m[m

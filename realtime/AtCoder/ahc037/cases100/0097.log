@@ -1,0 +1,39 @@
+[m[3;35m05.cpp #15 (0)[m[m
+ - [m[32m__cplusplus[m : [m[36m202002[31mL[m[m [34mlong[m[m[m
+[3;35m05.cpp #19[m  [33m`Case: #0`[m[m
+[m[3;35m05.cpp #217 (0)[m[m
+ - [m[32medges.graph.size()[m : [m[36m8384[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (0)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m4536[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #304 (0)[m[m
+ - [m[32mcost[m : [m[36m42282528039[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #217 (1)[m[m
+ - [m[32medges.graph.size()[m : [m[36m10382[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (1)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m6504[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #309 (0)[m[m
+ - [m[32mn_cost[m : [m[36m34943097452[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #217 (2)[m[m
+ - [m[32medges.graph.size()[m : [m[36m11148[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (2)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m7275[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #309 (1)[m[m
+ - [m[32mn_cost[m : [m[36m33173139959[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #217 (3)[m[m
+ - [m[32medges.graph.size()[m : [m[36m11204[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (3)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m7329[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #309 (2)[m[m
+ - [m[32mn_cost[m : [m[36m32922825695[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #217 (4)[m[m
+ - [m[32medges.graph.size()[m : [m[36m11212[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (4)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m7337[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #309 (3)[m[m
+ - [m[32mn_cost[m : [m[36m32884893547[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #217 (5)[m[m
+ - [m[32medges.graph.size()[m : [m[36m11212[31mUL[m[m [34munsigned long[m[m[m
+[m[3;35m05.cpp #231 (5)[m[m
+ - [m[32mg.edges().ssize()[m : [m[36m7337[31mL[m[m [34mlong[m[m[m
+[m[3;35m05.cpp #309 (4)[m[m
+ - [m[32mn_cost[m : [m[36m32884893547[31mL[m[m [34mlong[m[m[m
