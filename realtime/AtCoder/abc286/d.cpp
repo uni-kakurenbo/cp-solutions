@@ -6,26 +6,28 @@
  */
 /* #language C++ GCC */
 /* #region template */
-#include <bits/stdc++.h>
-using namespace std;
-
-#include "template.hpp"
-/* #endregion */
+#include <cstdint>
+#include <vector>
+#include <iostream>
+#include <ranges>
+#include <tr2/dynamic_bitset>
 
 signed main() {
-    int n; ll x; cin >> n >> x;
-    vector<ll> a(n), b(n);
-    REP(i, n) cin >> a[i] >> b[i];
+    std::size_t n, x; std::cin >> n >> x;
+    std::vector<long> a(n), b(n);
+    for(const auto i : std::views::iota(0uz, n)) {
+        std::cin >> a[i] >> b[i];
+    }
 
-    bitset<20000> bits(0);
+    std::tr2::dynamic_bitset bits(x + 1);
 
     bits.set(0);
 
-    REP(i, n) {
-        REP(b[i]) bits |= bits << a[i];
+    for(const auto i : std::views::iota(0uz, n)) {
+        for(const auto _ : std::views::iota(0l, b[i])) bits |= bits << a[i];
     }
 
-    print((bits[x] ? "Yes" : "No"));
+    std::cout << (bits.test(x) ? "Yes" : "No") << "\n";
 
     return 0;
 }

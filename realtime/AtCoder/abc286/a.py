@@ -3,7 +3,7 @@
 #
 # CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
 
-# #language PyPy3 #
+# #language PyPy 3 #
 
 from sys import setrecursionlimit, stderr, argv
 # setrecursionlimit(10**5)
