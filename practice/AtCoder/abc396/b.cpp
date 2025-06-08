@@ -4,7 +4,7 @@
  *
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
-/* #language C++ 20 GCC */
+/* #language C++ 23 GCC */
 // #define DEBUGGER_ENABLED
 
 #include "template/standard.hpp"
@@ -24,11 +24,20 @@ signed main() {
 
 #include "template/warnings.hpp"
 void solve() {
-    i32 r, x; input >> r >> x;
-    if(x == 1) {
-        print.yesno(1600 <= r && r < 3000);
-    }
-    else {
-        print.yesno(1200 <= r && r < 2400);
+    i32 q; input >> q;
+
+    std::stack<i32> stk;
+    REP(100) stk.push(0);
+
+    REP(q) {
+        i32 t; input >> t;
+        if(t == 1) {
+            i32 x; input >> x;
+            stk.push(x);
+        }
+        if(t == 2) {
+            print(stk.top());
+            stk.pop();
+        }
     }
 }

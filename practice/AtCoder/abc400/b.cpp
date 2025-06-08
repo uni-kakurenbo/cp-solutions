@@ -4,7 +4,7 @@
  *
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
-/* #language C++ 20 GCC */
+/* #language C++ 23 GCC */
 // #define DEBUGGER_ENABLED
 
 #include "template/standard.hpp"
@@ -24,11 +24,16 @@ signed main() {
 
 #include "template/warnings.hpp"
 void solve() {
-    i32 r, x; input >> r >> x;
-    if(x == 1) {
-        print.yesno(1600 <= r && r < 3000);
+    i64 n, m; input >> n >> m;
+    constexpr i64 M = uni::pow(10UL, 9) + 1;
+
+    i64 x = 0;
+    i64 p = 1;
+    FOR(i, m) {
+        x = uni::add_clamp(x, p, -INF64, M);
+        p = uni::mul_clamp(p, n, -INF64, M);
     }
-    else {
-        print.yesno(1200 <= r && r < 2400);
-    }
+
+    if(x >= M) print("inf");
+    else print(x);
 }

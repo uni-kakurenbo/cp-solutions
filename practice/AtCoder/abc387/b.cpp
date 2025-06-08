@@ -4,7 +4,7 @@
  *
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
-/* #language C++ 20 GCC */
+/* #language C++ 23 GCC */
 // #define DEBUGGER_ENABLED
 
 #include "template/standard.hpp"
@@ -24,11 +24,14 @@ signed main() {
 
 #include "template/warnings.hpp"
 void solve() {
-    i32 r, x; input >> r >> x;
-    if(x == 1) {
-        print.yesno(1600 <= r && r < 3000);
+    i64 x; input >> x;
+
+    i64 ans = 0;
+
+    FOR(i, 1, 9) FOR(j, 1, 9) {
+        auto p = i * j;
+        if(p != x) ans += p;
     }
-    else {
-        print.yesno(1200 <= r && r < 2400);
-    }
+
+    print(ans);
 }

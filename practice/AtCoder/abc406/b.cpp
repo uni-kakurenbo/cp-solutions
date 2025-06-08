@@ -24,5 +24,17 @@ signed main() {
 
 #include "template/warnings.hpp"
 void solve() {
+    i64 n, k; input >> n >> k;
+    vector<i64> a(n); input >> a;
 
+    i64 m = uni::pow(10L, k);
+
+    i64 now = 1;
+    ITR(x, a) {
+        auto v = uni::mul_clamp(now, x, -INF64, m);
+        if(v < m) now = v;
+        else now = 1;
+    }
+
+    print(now);
 }

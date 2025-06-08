@@ -4,7 +4,7 @@
  *
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
-/* #language C++ 20 GCC */
+/* #language C++ 23 GCC */
 // #define DEBUGGER_ENABLED
 
 #include "template/standard.hpp"
@@ -24,11 +24,13 @@ signed main() {
 
 #include "template/warnings.hpp"
 void solve() {
-    i32 r, x; input >> r >> x;
-    if(x == 1) {
-        print.yesno(1600 <= r && r < 3000);
+    i32 n; input >> n;
+    string a; input >> a;
+
+    i32 ans = 0;
+    REP(i, 1, n - 1) {
+        if(a[i] == '#') continue;
+        ans += (a[i-1] == '#' && a[i+1] == '#');
     }
-    else {
-        print.yesno(1200 <= r && r < 2400);
-    }
+    print(ans);
 }

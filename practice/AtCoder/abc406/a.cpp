@@ -24,5 +24,6 @@ signed main() {
 
 #include "template/warnings.hpp"
 void solve() {
-
+    spair<i32> p, q; input >> p >> q;
+    print.yesno(q < p);
 }

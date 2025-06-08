@@ -24,5 +24,18 @@ signed main() {
 
 #include "template/warnings.hpp"
 void solve() {
-    i32 
+    string s; input >> s;
+    uni::run_length rle(s);
+
+    i64 ans = 0;
+    ITR(k, v, rle) {
+        if(k == '0') {
+            ans += (v + 1) / 2;
+        }
+        else {
+            ans += v;
+        }
+    }
+
+    print(ans);
 }

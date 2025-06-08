@@ -4,7 +4,7 @@
  *
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
-/* #language C++ 20 GCC */
+/* #language C++ 23 GCC */
 // #define DEBUGGER_ENABLED
 
 #include "template/standard.hpp"
@@ -24,11 +24,17 @@ signed main() {
 
 #include "template/warnings.hpp"
 void solve() {
-    i32 r, x; input >> r >> x;
-    if(x == 1) {
-        print.yesno(1600 <= r && r < 3000);
+    array<i32, 2> a; input >> a;
+
+
+    i32 ans = 0;
+
+    FOR(x, -300, 300) {
+        std::array<i32, 3> b = { a[0], a[1], x };
+        std::ranges::sort(b);
+
+        ans += (b[2] - b[1] == b[1] - b[0]);
     }
-    else {
-        print.yesno(1200 <= r && r < 2400);
-    }
+
+    print(ans);
 }

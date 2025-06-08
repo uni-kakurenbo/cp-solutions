@@ -4,7 +4,7 @@
  *
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
-/* #language C++ 20 GCC */
+/* #language C++ 23 GCC */
 // #define DEBUGGER_ENABLED
 
 #include "template/standard.hpp"
@@ -24,11 +24,21 @@ signed main() {
 
 #include "template/warnings.hpp"
 void solve() {
-    i32 r, x; input >> r >> x;
-    if(x == 1) {
-        print.yesno(1600 <= r && r < 3000);
-    }
-    else {
-        print.yesno(1200 <= r && r < 2400);
+    i32 n, m; input >> n >> m;
+    uni::grid<char, string> s(n), t(m);
+    input >> s >> t;
+
+    FOR(si, n - m) FOR(sj, n - m) {
+        bool ok = true;
+        REP(i, m) REP(j, m) {
+            if(t(i, j) != s(si + i, sj + j)) {
+                ok = false;
+                break;
+            }
+        }
+        if(ok) {
+            print(si + 1, sj + 1);
+            return;
+        }
     }
 }
