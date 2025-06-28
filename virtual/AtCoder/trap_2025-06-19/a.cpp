@@ -7,20 +7,23 @@
 /* #language C++ 23 GCC */
 // #define DEBUGGER_ENABLED
 
-#include "template/standard.hpp"
+// #include "template/standard.hpp"
 
 void solve();
 
 signed main() {
-    debug(__cplusplus);
+    // debug(__cplusplus);
     int $ = 1;
-    // std::cin >> $;
-    for(int _ = 0; _ < $; ++_) {
-        debug_("Case: #" + std::to_string(_));
+     //std::cin >> $;
+    while(true){
+        // debug_("Case: #" + std::to_string(_));
         solve();
     }
     return 0;
 }
+
+#include <bits/stdc++.h>
+using namespace std;
 
 using i32 = int;
 using i64 = long;
@@ -38,11 +41,16 @@ int f(const string& s, int& p) {
     assert(false);
 }
 
-
 int e(const string& s, int& p) {
     if(s[p] == '(') {
-        auto v = e(s, ++p);
-        auto
+        ++p;
+        auto v0 = e(s, p);
+        auto op = s[p++];
+        auto v1 = e(s, p);
+        ++p;
+        if(op == '<') return std::max(v0, v1);
+        if(op == '>') return std::min(v0, v1);
+        assert(false);
     }
     else {
         return f(s, p);
@@ -51,8 +59,19 @@ int e(const string& s, int& p) {
 
 void solve() {
     std::cin >> N;
-    V.resize(N);
+    if(N == 0) exit(0);
     std::cin >> V;
 
     string s, t; cin >> s >> t;
+    std::ranges::sort(V);
+
+    // int i = 0;
+    // std::cout << e(s, i) << "\n";
+    i64 ans = 0;
+    do {
+        int i = 0, j = 0;
+        ans += e(s, i) == e(t, j);
+    } while(std::ranges::next_permutation(V).found);
+
+    std::cout << ans << "\n";
 }

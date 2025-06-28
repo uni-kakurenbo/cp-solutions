@@ -22,37 +22,40 @@ signed main() {
     return 0;
 }
 
-using i32 = int;
-using i64 = long;
-
 #include "template/warnings.hpp"
-
-int N;
-string V;
-
-int f(const string& s, int& p) {
-    auto v = s[p++];
-    for(auto i : std::views::iota(0, N)) {
-        if(v == V[i]) return i;
-    }
-    assert(false);
-}
-
-
-int e(const string& s, int& p) {
-    if(s[p] == '(') {
-        auto v = e(s, ++p);
-        auto
-    }
-    else {
-        return f(s, p);
-    }
-}
-
 void solve() {
-    std::cin >> N;
-    V.resize(N);
-    std::cin >> V;
+    using modint = uni::dynamic_barrett_modint_64bit<-1>;
+    i64 a, x, m; input >> a >> x >> m;
+    modint::set_mod(m);
 
-    string s, t; cin >> s >> t;
+    auto r = uni::sqrt_floor(x);
+    debug(r);
+
+    modint ans = 0;
+
+    modint sum = 0;
+    modint p = 1;
+    REP(r) {
+        sum += p;
+        p *= a;
+    }
+
+    modint q = 1;
+    debug(sum, q);
+
+    REP(r) {
+        ans += sum;
+        sum *= p;
+        q *= p;
+    }
+
+    debug(ans);
+    debug(x, r * r, q);
+
+    REP(x - r * r) {
+        ans += q;
+        q *= a;
+    }
+
+    print(ans);
 }

@@ -22,37 +22,32 @@ signed main() {
     return 0;
 }
 
-using i32 = int;
-using i64 = long;
-
 #include "template/warnings.hpp"
-
-int N;
-string V;
-
-int f(const string& s, int& p) {
-    auto v = s[p++];
-    for(auto i : std::views::iota(0, N)) {
-        if(v == V[i]) return i;
-    }
-    assert(false);
-}
-
-
-int e(const string& s, int& p) {
-    if(s[p] == '(') {
-        auto v = e(s, ++p);
-        auto
-    }
-    else {
-        return f(s, p);
-    }
-}
-
 void solve() {
-    std::cin >> N;
-    V.resize(N);
-    std::cin >> V;
+    i32 n, m; input >> n >> m;
 
-    string s, t; cin >> s >> t;
+    uni::disjoint_set ds(n);
+
+    vector<i64> deg(n);
+
+    REP(m) {
+        i32 p, q; char x, y; input >> p >> x >> q >> y;
+        --p, --q;
+        ds.merge(p, q);
+        deg[p]++, deg[q]++;
+    }
+
+    auto groups = ds.groups();
+
+    i64 ans = 0;
+
+    ITR(group, groups) {
+        bool f = true;
+        ITR(i, group) {
+            if(deg[i] != 2) f = false;
+        }
+        ans += f;
+    }
+
+    print(ans, ds.group_count() - ans);
 }

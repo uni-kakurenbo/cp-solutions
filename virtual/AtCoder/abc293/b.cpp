@@ -4,7 +4,7 @@
  *
  * CC0 1.0  http://creativecommons.org/publicdomain/zero/1.0/deed.ja
  */
-/* #language C++ 20 GCC */
+/* #language C++ 23 GCC */
 // #define DEBUGGER_ENABLED
 
 #include "template/standard.hpp"
@@ -22,11 +22,24 @@ signed main() {
     return 0;
 }
 
-#include "iterable/longest_common_subsequence.hpp"
-
 #include "template/warnings.hpp"
 void solve() {
-    std::string s, t; input >> s >> t;
-    uni::lcs_sizes dp(s, t);
-    print(dp.restore(s, t));
+    i32 n; input >> n;
+    vector<i64> a(n); input >> a; a -= 1;
+
+    std::set<i32> al;
+    REP(i, n) {
+        if(al.contains(i)) continue;
+        al.emplace(a[i]);
+    }
+
+    vector<i32> ans;
+
+    REP(i, n) {
+        if(al.contains(i)) continue;
+        ans.push_back(i + 1);
+    }
+
+    print(ans.size());
+    print(ans);
 }

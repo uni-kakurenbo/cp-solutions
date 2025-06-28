@@ -27,26 +27,25 @@ void solve() {
     i32 h, w; input >> h >> w;
     uni::grid<char, string> g(h, w); input >> g;
 
-    auto SNUKE = "snuke"s;
-    auto n = SNUKE.size();
+    i32 minx = h + 1, miny = w + 1, maxx = -1, maxy = -1;
 
-    auto find = [&](auto x, auto y, auto d)
-    -> std::optional<vector<spair<i32>>> {
-        vector<spair<i32>> res;
-        REP(i, n) {
-            if(!g.is_valid(x, y)) return {};
-            if(SNUKE[i] != g(x, y)) return {};
-            res.emplace_back(x + 1, y + 1);
-            x += DIRS8[d].$F;
-            y += DIRS8[d].$S;
+    REP(i, h) REP(j, w) {
+        if(g(i, j) == '#') {
+            chmin(minx, i);
+            chmin(miny, j);
+            chmax(maxx, i);
+            chmax(maxy, j);
         }
-        return res;
-    };
+    }
 
-    REP(i, h) REP(j, w) REP(d, 8) {
-        if(auto x = find(i, j, d); x) {
-            print(*x);
+    debug(minx, maxx, miny, maxy);
+
+    FOR(i, minx, maxx) FOR(j, miny, maxy) {
+        if(g(i, j) == '.') {
+            print.no();
             return;
         }
     }
+
+    print.yes();
 }
